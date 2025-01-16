@@ -23,7 +23,7 @@ export const WalletConnector = () =>
     return (
         <QueryClientProvider client={queryClient}>
             <SuiClientProvider networks={networkConfig} network="mainnet">
-                <WalletProvider autoConnect={true}>
+                <WalletProvider autoConnect={false}>
                     <App />
                 </WalletProvider>
             </SuiClientProvider>
@@ -42,6 +42,13 @@ const App = () =>
     }, [currAcct]);
 
     return <div id="shopisui">
+
+    {currAcct &&
+        <div className="status">
+            Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
+        </div>
+    }
+
         {!currAcct &&
             <button
                 onClick={() => setShowConnectModal(true)}
@@ -65,11 +72,5 @@ const App = () =>
             open={showConnectModal}
             onOpenChange={setShowConnectModal}
         />
-
-        {currAcct &&
-            <div className="status">
-                Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
-            </div>
-        }
     </div>;
 };
