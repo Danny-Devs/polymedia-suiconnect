@@ -5,13 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.less";
 
-type ShopisuiEventDetail = {
+type WalletChangeDetail = {
     client: SuiClient;
     address: string | null;
 };
 
-const emitWalletEvent = (client: SuiClient, address: string | null) => {
-    const detail: ShopisuiEventDetail = { client, address };
+const emitWalletChangeEvent = (client: SuiClient, address: string | null) => {
+    const detail: WalletChangeDetail = { client, address };
     const event = new CustomEvent("shopisui-wallet-change", { detail });
     console.debug("[shopisui] wallet changed:", detail);
     window.dispatchEvent(event);
@@ -41,10 +41,11 @@ const App = () =>
     const currAcct = useCurrentAccount();
     const { mutate: disconnect } = useDisconnectWallet();
     const suiClient = useSuiClient();
+
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        emitWalletEvent(suiClient, currAcct?.address ?? null);
+        emitWalletChangeEvent(suiClient, currAcct?.address ?? null);
     }, [currAcct, suiClient]);
 
     return <div id="shopisui">
