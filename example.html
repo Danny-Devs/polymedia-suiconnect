@@ -11,10 +11,32 @@
         try {
             const { client, address } = event.detail;
             console.debug("[shopisui.onWalletChange] wallet address:", address);
+
             if (!address) { return; }
+
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
-            alert(`You are connected as ${address} and ${ownsNft ? "DO own" : "do NOT own"} a Kumo NFT`);
+
+            alert(`You are connected as ${address} and ${ownsNft ? "DO own" : "do NOT own"} a Kumo NFT`); // TODO remove
+
+            const event = new CustomEvent('nft-ownership-check', {
+                detail: { address, ownsNft }
+            });
+            window.dispatchEvent(event);
+
+            /* To handle the event in your Shopify custom code:
+
+            window.addEventListener('nft-ownership-check', (event) => {
+                const buyButton = document.getElementById('custom-cart-btn');
+                if (buyButton) {
+                    if (event.detail.ownsNft) {
+                        buyButton.classList.remove('hidden');
+                    } else {
+                        buyButton.classList.add('hidden');
+                    }
+                }
+            });
+            */
         }
         catch (error) {
             console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
