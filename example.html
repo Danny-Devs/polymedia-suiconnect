@@ -3,11 +3,64 @@
 <script>
 (function()
 {
-    // Handle wallet connect/disconnect
-    function onWalletChange(event) {
-        const { client, address } = event.detail;
-        console.log("Wallet status changed:", { client, address });
+    // === Your custom code ===
+
+    const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
+
+    async function onWalletChange(event) {
+        try {
+            const { client, address } = event.detail;
+            console.debug("[shopisui] Wallet status changed:", { client, address });
+            if (!address) {
+                console.debug("[shopisui] Not connected");
+                return;
+            }
+            const ownsKumo = await checkNftOwnership({ structType, address });
+            console.debug("[shopisui] ownsKumo:", ownsKumo);
+        }
+        catch (error) {
+            console.warn("[shopisui] Error checking NFT ownership:", error);
+        }
     }
+
+    async function checkNftOwnership({ structType, address })
+    {
+        const query = `
+        query {
+            sui {
+                nfts(
+                    where: {
+                        collection: { slug: { _eq: "${structType}" } }
+                        owner: { _eq: "${address}" }
+                    },
+                    limit: 1
+                ) {
+                    token_id
+                }
+            }
+        }`;
+
+        const response = await fetch("https://api.indexer.xyz/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-user": atob("dHJhZGVwb3J0Lnh5eg=="),
+                "x-api-key": atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ=="),
+            },
+            body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        return result.data.sui.nfts.length > 0;
+    }
+
+
+    // === ShopiSui ===
 
     // Load ShopiSui CSS
     const cssLink = document.createElement("link");
