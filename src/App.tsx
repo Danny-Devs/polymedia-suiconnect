@@ -3,13 +3,18 @@ import "@mysten/dapp-kit/dist/index.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import './App.less';
+import { SuiClient } from '@mysten/sui/client';
 
-const emitEvent = (connected: boolean, address: string | null) => {
-    const event = new CustomEvent('shopisuiEvent', {
-        detail: { connected, address }
-    });
+type ShopisuiEventDetail = {
+    client: SuiClient;
+    address: string | null;
+};
+
+const emitWalletEvent = (client: SuiClient, address: string | null) => {
+    const detail: ShopisuiEventDetail = { client, address };
+    const event = new CustomEvent('shopisui-wallet-change', { detail });
     window.dispatchEvent(event);
-    console.debug('shopisuiEvent', { connected, address });
+    console.debug('shopisui-wallet-change', detail);
 };
 
 export const WalletConnector = () =>
@@ -39,12 +44,8 @@ const App = () =>
     const [showConnectModal, setShowConnectModal] = useState(false);
 
     useEffect(() => {
-        (window as any).suiClient = suiClient;
-    }, [suiClient]);
-
-    useEffect(() => {
-        emitEvent(!!currAcct, currAcct?.address ?? null);
-    }, [currAcct]);
+        emitWalletEvent(suiClient, currAcct?.address ?? null);
+    }, [currAcct, suiClient]);
 
     return <div id="shopisui">
 
