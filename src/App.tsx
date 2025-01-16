@@ -41,7 +41,7 @@ const App = () =>
     const currAcct = useCurrentAccount();
     const { mutate: disconnect } = useDisconnectWallet();
     const suiClient = useSuiClient();
-    const [showConnectModal, setShowConnectModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         emitWalletEvent(suiClient, currAcct?.address ?? null);
@@ -49,34 +49,30 @@ const App = () =>
 
     return <div id="shopisui">
 
-    {currAcct &&
-        <div className="status">
-            Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
-        </div>
-    }
+        <ConnectModal
+            trigger={<></>}
+            open={isOpen}
+            onOpenChange={setIsOpen}
+        />
+
+        {currAcct &&
+            <div className="status">
+                <div className="status-text">
+                    Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
+                </div>
+            </div>
+        }
 
         {!currAcct &&
-            <button
-                onClick={() => setShowConnectModal(true)}
-                className="btn connect"
-            >
+            <button className="btn connect" onClick={() => setIsOpen(true)}>
                 CONNECT WALLET
             </button>
         }
 
         {currAcct &&
-            <button
-                onClick={() => disconnect()}
-                className="btn disconnect"
-            >
+            <button className="btn disconnect" onClick={() => disconnect()}>
                 DISCONNECT
             </button>
         }
-
-        <ConnectModal
-            trigger={<></>}
-            open={showConnectModal}
-            onOpenChange={setShowConnectModal}
-        />
     </div>;
 };
