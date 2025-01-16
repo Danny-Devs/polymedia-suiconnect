@@ -10,11 +10,15 @@ Add this "Custom liquid" to your Shopify theme:
 <script>
 (function()
 {
-    // Handle wallet connect/disconnect
-    function onWalletChange(event) {
+    // === Your custom code ===
+
+    async function onWalletChange(event) {
         const { client, address } = event.detail;
-        console.log("Wallet status changed:", { client, address });
+        console.debug("[shopisui.onWalletChange] wallet address:", address);
+        // your custom code goes here
     }
+
+    // === ShopiSui ===
 
     // Load ShopiSui CSS
     const cssLink = document.createElement("link");
@@ -24,7 +28,7 @@ Add this "Custom liquid" to your Shopify theme:
 
     // Load and initialize ShopiSui JS
     const script = document.createElement("script");
-    script.src = "https://shopisui.polymedia.app/assets/index-BI6mWmzs.js";
+    script.src = "https://shopisui.polymedia.app/assets/index-BYzmFkl_.js";
     script.onload = function() {
         window.shopisuiInit();
         window.addEventListener("shopisui-wallet-change", onWalletChange);

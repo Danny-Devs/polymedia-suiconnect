@@ -10,16 +10,14 @@
     async function onWalletChange(event) {
         try {
             const { client, address } = event.detail;
-            console.debug("[shopisui] Wallet status changed:", { client, address });
-            if (!address) {
-                console.debug("[shopisui] Not connected");
-                return;
-            }
-            const ownsKumo = await checkNftOwnership({ structType, address });
-            console.debug("[shopisui] ownsKumo:", ownsKumo);
+            console.debug("[shopisui.onWalletChange] wallet address:", address);
+            if (!address) { return; }
+            const ownsNft = await checkNftOwnership({ structType, address });
+            console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
+            alert(`You are connected as ${address} and ${ownsNft ? "DO own" : "do NOT own"} a Kumo NFT`);
         }
         catch (error) {
-            console.warn("[shopisui] Error checking NFT ownership:", error);
+            console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
         }
     }
 
@@ -59,7 +57,6 @@
         return result.data.sui.nfts.length > 0;
     }
 
-
     // === ShopiSui ===
 
     // Load ShopiSui CSS
@@ -70,7 +67,7 @@
 
     // Load and initialize ShopiSui JS
     const script = document.createElement("script");
-    script.src = "https://shopisui.polymedia.app/assets/index-BI6mWmzs.js";
+    script.src = "https://shopisui.polymedia.app/assets/index-BYzmFkl_.js";
     script.onload = function() {
         window.shopisuiInit();
         window.addEventListener("shopisui-wallet-change", onWalletChange);

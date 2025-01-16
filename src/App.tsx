@@ -13,8 +13,8 @@ type ShopisuiEventDetail = {
 const emitWalletEvent = (client: SuiClient, address: string | null) => {
     const detail: ShopisuiEventDetail = { client, address };
     const event = new CustomEvent("shopisui-wallet-change", { detail });
+    console.debug("[shopisui] wallet changed:", detail);
     window.dispatchEvent(event);
-    console.debug("shopisui-wallet-change", detail);
 };
 
 export const WalletConnector = () =>
