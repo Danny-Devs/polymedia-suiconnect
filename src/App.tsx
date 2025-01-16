@@ -53,13 +53,6 @@ const App = () =>
             open={isOpen}
             onOpenChange={setIsOpen}
         />
-        {currAcct &&
-            <div className="status">
-                <div className="status-text">
-                    Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
-                </div>
-            </div>
-        }
         {!currAcct &&
             <button className="btn connect" onClick={() => setIsOpen(true)}>
                 CONNECT WALLET
