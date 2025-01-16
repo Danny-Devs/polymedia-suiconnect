@@ -8,14 +8,14 @@ Add this "Custom liquid" to your Shopify theme:
 <script>
 (function() {
     // Load ShopiSui CSS
-    const cssLink = document.createElement('link');
-    cssLink.rel = 'stylesheet';
-    cssLink.href = 'https://shopisui.polymedia.app/assets/index-B_JEpp2Z.css';
+    const cssLink = document.createElement("link");
+    cssLink.rel = "stylesheet";
+    cssLink.href = "https://shopisui.polymedia.app/assets/index-B_JEpp2Z.css";
     document.head.appendChild(cssLink);
 
     // Load and initialize ShopiSui JS
-    const script = document.createElement('script');
-    script.src = 'https://shopisui.polymedia.app/assets/index-CafobUI1.js';
+    const script = document.createElement("script");
+    script.src = "https://shopisui.polymedia.app/assets/index-BI6mWmzs.js";
     script.onload = function() {
         window.shopisuiInit();
     };

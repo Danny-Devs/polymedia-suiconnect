@@ -1,9 +1,9 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider, useDisconnectWallet, useSuiClient } from '@mysten/dapp-kit';
+import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSuiClient, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import './App.less';
-import { SuiClient } from '@mysten/sui/client';
+import { SuiClient } from "@mysten/sui/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import "./App.less";
 
 type ShopisuiEventDetail = {
     client: SuiClient;
@@ -12,9 +12,9 @@ type ShopisuiEventDetail = {
 
 const emitWalletEvent = (client: SuiClient, address: string | null) => {
     const detail: ShopisuiEventDetail = { client, address };
-    const event = new CustomEvent('shopisui-wallet-change', { detail });
+    const event = new CustomEvent("shopisui-wallet-change", { detail });
     window.dispatchEvent(event);
-    console.debug('shopisui-wallet-change', detail);
+    console.debug("shopisui-wallet-change", detail);
 };
 
 export const WalletConnector = () =>
