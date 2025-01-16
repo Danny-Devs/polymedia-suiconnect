@@ -48,13 +48,11 @@ const App = () =>
     }, [currAcct, suiClient]);
 
     return <div id="shopisui">
-
         <ConnectModal
             trigger={<></>}
             open={isOpen}
             onOpenChange={setIsOpen}
         />
-
         {currAcct &&
             <div className="status">
                 <div className="status-text">
@@ -62,13 +60,11 @@ const App = () =>
                 </div>
             </div>
         }
-
         {!currAcct &&
             <button className="btn connect" onClick={() => setIsOpen(true)}>
                 CONNECT WALLET
             </button>
         }
-
         {currAcct &&
             <button className="btn disconnect" onClick={() => disconnect()}>
                 DISCONNECT

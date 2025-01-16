@@ -1,21 +1,18 @@
-#shopisui {
+#shopisui-root {
+    display: inline-block;
     font-family: system-ui, sans-serif;
-    max-width: 400px;
-    margin: 1.25rem auto;
-    text-align: center;
-
+}
+#shopisui {
     .btn {
         padding: 0.625rem 1.25rem;
         border-radius: 0.5rem;
         border: none;
         cursor: pointer;
-        margin-right: 0.625rem;
         font-weight: 600;
 
         &.connect {
             background: #1E88E5;
             color: white;
-
             &:hover {
                 background: #1976D2;
             }
@@ -24,7 +21,6 @@
         &.disconnect {
             background: #DC3545;
             color: white;
-
             &:hover {
                 background: #C82333;
             }
