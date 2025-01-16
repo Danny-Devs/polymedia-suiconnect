@@ -1,14 +1,29 @@
 #shopisui {
-    .connect {
+    font-family: system-ui, sans-serif;
+    .btn {
         padding: 10px 20px;
         border-radius: 8px;
         border: none;
-        background: #1E88E5;
-        color: white;
         cursor: pointer;
+        margin-right: 10px;
+        font-weight: 600;
 
-        &:hover {
-            background: #1976D2;
+        &.connect {
+            background: #1E88E5;
+            color: white;
+
+            &:hover {
+                background: #1976D2;
+            }
+        }
+
+        &.disconnect {
+            background: #DC3545;
+            color: white;
+
+            &:hover {
+                background: #C82333;
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider } from '@mysten/dapp-kit';
+import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider, useDisconnectWallet } from '@mysten/dapp-kit';
 import "@mysten/dapp-kit/dist/index.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -34,6 +34,7 @@ export const WalletConnector = () =>
 const App = () =>
 {
     const currAcct = useCurrentAccount();
+    const { mutate: disconnect } = useDisconnectWallet();
     const [showConnectModal, setShowConnectModal] = useState(false);
 
     useEffect(() => {
@@ -41,15 +42,23 @@ const App = () =>
     }, [currAcct]);
 
     return <div id="shopisui">
-        <button
-            onClick={() => setShowConnectModal(true)}
-            className="btn connect"
-        >
-            {currAcct ?
-                `Connected: ${currAcct.address.slice(0,6)}...${currAcct.address.slice(-4)}` :
-                'Connect Wallet'
-            }
-        </button>
+        {!currAcct &&
+            <button
+                onClick={() => setShowConnectModal(true)}
+                className="btn connect"
+            >
+                CONNECT WALLET
+            </button>
+        }
+
+        {currAcct &&
+            <button
+                onClick={() => disconnect()}
+                className="btn disconnect"
+            >
+                DISCONNECT
+            </button>
+        }
 
         <ConnectModal
             trigger={<></>}
@@ -57,11 +66,10 @@ const App = () =>
             onOpenChange={setShowConnectModal}
         />
 
-        <div className="status">
-            Connection status: {currAcct ?
-                `Connected to ${currAcct.address.slice(0,6)}...${currAcct.address.slice(-4)}` :
-                'Not connected'
-            }
-        </div>
+        {currAcct &&
+            <div className="status">
+                Connected as {currAcct.address.slice(0,6)}...{currAcct.address.slice(-4)}
+            </div>
+        }
     </div>;
 };
