@@ -1,12 +1,21 @@
 # ShopiSui - Shopify wallet connector for Sui
 
+## Installation
+
 Add this "Custom liquid" to your Shopify theme:
 
-```js
+```html
 <div id="shopisui-root"></div>
 
 <script>
-(function() {
+(function()
+{
+    // Handle wallet connect/disconnect
+    function onWalletChange(event) {
+        const { client, address } = event.detail;
+        console.log("Wallet status changed:", { client, address });
+    }
+
     // Load ShopiSui CSS
     const cssLink = document.createElement("link");
     cssLink.rel = "stylesheet";
@@ -18,6 +27,7 @@ Add this "Custom liquid" to your Shopify theme:
     script.src = "https://shopisui.polymedia.app/assets/index-BI6mWmzs.js";
     script.onload = function() {
         window.shopisuiInit();
+        window.addEventListener("shopisui-wallet-change", onWalletChange);
     };
     document.body.appendChild(script);
 })();
