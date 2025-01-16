@@ -1,7 +1,16 @@
 import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider } from '@mysten/dapp-kit';
 import "@mysten/dapp-kit/dist/index.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import './App.less';
+
+const emitWalletEvent = (connected: boolean, address: string | null) => {
+    const event = new CustomEvent('walletEvent', {
+        detail: { connected, address }
+    });
+    window.dispatchEvent(event);
+    console.debug('walletEvent', { connected, address });
+};
 
 export const WalletConnector = () =>
 {
@@ -26,19 +35,20 @@ const App = () =>
 {
     const currAcct = useCurrentAccount();
     const [showConnectModal, setShowConnectModal] = useState(false);
-    return <>
+
+    useEffect(() => {
+        emitWalletEvent(!!currAcct, currAcct?.address ?? null);
+    }, [currAcct]);
+
+    return <div id="shopisui">
         <button
             onClick={() => setShowConnectModal(true)}
-            style={{
-                padding: '10px 20px',
-                borderRadius: '8px',
-                border: 'none',
-                background: '#1E88E5',
-                color: 'white',
-                cursor: 'pointer'
-            }}
+            className="btn connect"
         >
-            Connect Wallet
+            {currAcct ?
+                `Connected: ${currAcct.address.slice(0,6)}...${currAcct.address.slice(-4)}` :
+                'Connect Wallet'
+            }
         </button>
 
         <ConnectModal
@@ -47,13 +57,11 @@ const App = () =>
             onOpenChange={setShowConnectModal}
         />
 
-        <div style={{
-            marginTop: '1rem',
-        }}>
+        <div className="status">
             Connection status: {currAcct ?
-                `Connected as ${currAcct.address.slice(0,6)}...${currAcct.address.slice(-4)}` :
+                `Connected to ${currAcct.address.slice(0,6)}...${currAcct.address.slice(-4)}` :
                 'Not connected'
             }
         </div>
-    </>;
+    </div>;
 };

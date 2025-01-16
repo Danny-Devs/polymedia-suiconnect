@@ -6,7 +6,7 @@ import { WalletConnector } from './App';
 
 // Initialize immediately if we're in development
 if (import.meta.env.MODE === 'development') {
-    const container = document.getElementById('wallet-connect-root');
+    const container = document.getElementById('shopisui-root');
     if (container) {
         const root = createRoot(container);
         root.render(<WalletConnector />);
@@ -15,7 +15,7 @@ if (import.meta.env.MODE === 'development') {
 
 // Export initialization function for production use in Shopify
 (window as any).initWalletConnector = () => {
-    const container = document.getElementById('wallet-connect-root');
+    const container = document.getElementById('shopisui-root');
     if (container) {
         const root = createRoot(container);
         root.render(<WalletConnector />);
