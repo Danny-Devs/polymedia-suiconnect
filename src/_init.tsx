@@ -14,7 +14,7 @@ if (import.meta.env.MODE === 'development') {
 }
 
 // Export initialization function for production use in Shopify
-(window as any).initWalletConnector = () => {
+(window as any).shopisuiInit = () => {
     const container = document.getElementById('shopisui-root');
     if (container) {
         const root = createRoot(container);
