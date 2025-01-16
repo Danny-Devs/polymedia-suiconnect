@@ -1,15 +1,15 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider, useDisconnectWallet } from '@mysten/dapp-kit';
+import { ConnectModal, SuiClientProvider, useCurrentAccount, WalletProvider, useDisconnectWallet, useSuiClient } from '@mysten/dapp-kit';
 import "@mysten/dapp-kit/dist/index.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import './App.less';
 
-const emitWalletEvent = (connected: boolean, address: string | null) => {
-    const event = new CustomEvent('walletEvent', {
+const emitEvent = (connected: boolean, address: string | null) => {
+    const event = new CustomEvent('shopisuiEvent', {
         detail: { connected, address }
     });
     window.dispatchEvent(event);
-    console.debug('walletEvent', { connected, address });
+    console.debug('shopisuiEvent', { connected, address });
 };
 
 export const WalletConnector = () =>
@@ -35,10 +35,15 @@ const App = () =>
 {
     const currAcct = useCurrentAccount();
     const { mutate: disconnect } = useDisconnectWallet();
+    const suiClient = useSuiClient();
     const [showConnectModal, setShowConnectModal] = useState(false);
 
     useEffect(() => {
-        emitWalletEvent(!!currAcct, currAcct?.address ?? null);
+        (window as any).suiClient = suiClient;
+    }, [suiClient]);
+
+    useEffect(() => {
+        emitEvent(!!currAcct, currAcct?.address ?? null);
     }, [currAcct]);
 
     return <div id="shopisui">
