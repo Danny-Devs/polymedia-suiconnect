@@ -82,7 +82,8 @@
               <p>Only 2222 Kumo plushies available! <br>
               Equipped with NFC chips that unlock NFTs, rewards, and more.</p>
               <p>Pre-order today! Limited supply.</p>
-              <button id="custom-cart-btn" class="buy-now-btn"><h5>Buy Now</h5></button>
+              <button id="custom-cart-btn" class="buy-now-btn hidden"><h5>Buy Now</h5></button>
+              <h3 id="not-owned-msg" class="hidden">You must own a Kumo NFT for holder pre-order access</h3>
           </div>
       </div>
   </div>
@@ -91,12 +92,17 @@
 <script>
   // ShopiSui event handling
   window.addEventListener('nft-ownership-check', (event) => {
+      const popup = document.getElementById('login-popup');
+      popup.classList.add('hidden');
+
       const buyButton = document.getElementById('custom-cart-btn');
-      if (!buyButton) { return; }
+      const notOwnedMsg = document.getElementById('not-owned-msg');
       if (event.detail.ownsNft) {
           buyButton.classList.remove('hidden');
+          notOwnedMsg.classList.add('hidden');
       } else {
           buyButton.classList.add('hidden');
+          notOwnedMsg.classList.remove('hidden');
       }
   });
 
