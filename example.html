@@ -15,8 +15,6 @@
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
-            alert(`You are connected as ${address} and ${ownsNft ? "DO own" : "do NOT own"} a Kumo NFT`); // TODO remove
-
             const nftOwnerEvent = new CustomEvent('nft-ownership-check', {
                 detail: { address, ownsNft }
             });
