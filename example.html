@@ -9,9 +9,9 @@
 
     const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
 
-    async function onWalletChange(event) {
+    async function onWalletChange(walletEvent) {
         try {
-            const { client, address } = event.detail;
+            const { client, address } = walletEvent.detail;
             console.debug("[shopisui.onWalletChange] wallet address:", address);
 
             if (!address) { return; }
@@ -21,10 +21,10 @@
 
             alert(`You are connected as ${address} and ${ownsNft ? "DO own" : "do NOT own"} a Kumo NFT`); // TODO remove
 
-            const event = new CustomEvent('nft-ownership-check', {
+            const nftOwnerEvent = new CustomEvent('nft-ownership-check', {
                 detail: { address, ownsNft }
             });
-            window.dispatchEvent(event);
+            window.dispatchEvent(nftOwnerEvent);
 
             /* To handle the event in your Shopify custom code:
 
