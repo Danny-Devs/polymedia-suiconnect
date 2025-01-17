@@ -1,7 +1,3 @@
-<!-- Add this where you want to display the [CONNECT WALLET] button -->
-<div id="shopisui-root"></div>
-
-<!-- Add this script to a "Custom liquid" Shopify section -->
 <script>
 (function()
 {
@@ -25,20 +21,6 @@
                 detail: { address, ownsNft }
             });
             window.dispatchEvent(nftOwnerEvent);
-
-            /* To handle the event in your Shopify custom code:
-
-            window.addEventListener('nft-ownership-check', (event) => {
-                const buyButton = document.getElementById('custom-cart-btn');
-                if (buyButton) {
-                    if (event.detail.ownsNft) {
-                        buyButton.classList.remove('hidden');
-                    } else {
-                        buyButton.classList.add('hidden');
-                    }
-                }
-            });
-            */
         }
         catch (error) {
             console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
@@ -91,7 +73,7 @@
 
     // Load and initialize ShopiSui JS
     const script = document.createElement("script");
-    script.src = "https://shopisui.polymedia.app/assets/index-Blai89VI.js";
+    script.src = "https://shopisui.polymedia.app/assets/index-SdeMN7eJ.js";
     script.onload = function() {
         window.shopisuiInit();
         window.addEventListener("shopisui-wallet-change", onWalletChange);
