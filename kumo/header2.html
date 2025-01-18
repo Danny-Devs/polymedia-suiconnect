@@ -108,17 +108,14 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', showPopup);
+    function showPopup() {
         const popup = document.getElementById('login-popup');
-        const connectWalletButton = document.getElementById('connect-wallet-btn');
+        popup.style.display = 'flex';
+    }
 
-        function showPopup() { popup.style.display = 'flex'; }
-        function hidePopup() { popup.style.display = 'none'; }
-
-        showPopup();
-    });
-
-    window.addEventListener("suiconnect-wallet-change", async (walletEvent) =>
+    window.addEventListener("suiconnect-wallet-change", onWalletChange);
+    async function onWalletChange(walletEvent)
     {
         const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
         try {
@@ -144,7 +141,7 @@
         catch (error) {
             console.warn("[suiconnect.onWalletChange] error checking NFT ownership:", error);
         }
-    });
+    }
 
     function checkPassword() {
         const password = document.getElementById('access-password').value;

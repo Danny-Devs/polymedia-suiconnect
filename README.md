@@ -24,7 +24,7 @@ Add a Sui wallet connector anywhere.
 
         // JS
         const script = document.createElement("script");
-        script.src = "https://suiconnect.polymedia.app/assets/index-2bFCJb6z.js";
+        script.src = "https://suiconnect.polymedia.app/assets/index-CyXFwwKc.js";
         script.onload = () => window.suiconnectInit();
         document.body.appendChild(script);
     })();

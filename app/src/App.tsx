@@ -13,7 +13,7 @@ type WalletChangeDetail = {
 const emitWalletChangeEvent = (client: SuiClient, address: string | null) => {
     const detail: WalletChangeDetail = { client, address };
     const event = new CustomEvent("suiconnect-wallet-change", { detail });
-    console.debug("[suiconnect] wallet changed:", detail);
+    console.debug("[suiconnect] wallet change:", address);
     window.dispatchEvent(event);
 };
 
