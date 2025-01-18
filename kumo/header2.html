@@ -133,11 +133,9 @@
             if (ownsNft) {
                 const popup = document.getElementById('login-popup');
                 const buyButton = document.getElementById('custom-cart-btn');
-                const notOwnedMsg = document.getElementById('not-owned-msg');
 
                 popup.classList.add('hidden');
                 buyButton.classList.remove('hidden');
-                notOwnedMsg.classList.add('hidden');
             } else {
                 const walletError = document.getElementById('wallet-error');
                 walletError.classList.remove('hidden');
@@ -153,12 +151,10 @@
         const passwordError = document.getElementById('password-error');
         const popup = document.getElementById('login-popup');
         const buyButton = document.getElementById('custom-cart-btn');
-        const notOwnedMsg = document.getElementById('not-owned-msg');
 
         if (password === atob('a3Vtbw==') ) { // TODO
             popup.classList.add('hidden');
             buyButton.classList.remove('hidden');
-            notOwnedMsg.classList.add('hidden');
         } else {
             passwordError.textContent = "Incorrect password";
             passwordError.classList.remove('hidden');
