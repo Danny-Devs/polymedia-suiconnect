@@ -14,7 +14,7 @@
 
     .popup {
         background: white;
-        padding: 40px;
+        padding: 30px;
         border-radius: 10px;
         text-align: center;
         width: 90%;
@@ -25,21 +25,83 @@
         margin-bottom: 20px;
     }
 
+    .popup h3 {
+        color: rgb(35, 35, 35);
+    }
+
     .popup button {
-        padding: 10px 20px;
-        background-color: #9579ff;
-        color: white;
+        padding: 0.625rem 1.25rem;
+        border-radius: 0.5rem;
         border: none;
-        border-radius: 5px;
         cursor: pointer;
+        font-weight: 600;
+        background: #1E88E5;
+        color: white;
+    }
+
+    .popup button:hover {
+        background: #1976D2;
+    }
+
+    .access-options {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .option-section {
+        width: 100%;
+        max-width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .option-section h3 {
+        margin-bottom: 5px;
+    }
+
+    .option-section p {
+        margin: 0;
+    }
+
+    .password-section input[type="password"] {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 200px;
+    }
+
+    .error-message {
+        color: #ff4444;
+        margin: 0;
     }
 </style>
 
 <div id="login-popup" class="popup-overlay">
     <div class="popup">
-        <h2>Please Connect Your Wallet</h2>
-        <p>Connect your wallet to verify NFT ownership and access the site.</p>
-        <div id="shopisui-root"></div>
+        <h2>Access Required</h2>
+        <p>Connect your wallet OR enter the access password to continue</p>
+
+        <div class="access-options">
+            <div class="option-section wallet-section">
+                <h3>Option 1: Connect Wallet</h3>
+                <p>Connect wallet to verify NFT ownership</p>
+                <div id="shopisui-root"></div>
+                <p id="wallet-error" class="error-message hidden">No NFT found in connected wallet</p>
+            </div>
+
+            <div class="option-section password-section">
+                <h3>Option 2: Enter Password</h3>
+                <input type="password" id="access-password" placeholder="Enter access password">
+                <button onclick="checkPassword()">SUBMIT</button>
+                <p id="password-error" class="error-message hidden">Incorrect password</p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -87,21 +149,38 @@
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
-            const popup = document.getElementById('login-popup');
-            popup.classList.add('hidden');
-
-            const buyButton = document.getElementById('custom-cart-btn');
-            const notOwnedMsg = document.getElementById('not-owned-msg');
             if (ownsNft) {
+                const popup = document.getElementById('login-popup');
+                const buyButton = document.getElementById('custom-cart-btn');
+                const notOwnedMsg = document.getElementById('not-owned-msg');
+
+                popup.classList.add('hidden');
                 buyButton.classList.remove('hidden');
                 notOwnedMsg.classList.add('hidden');
             } else {
-                buyButton.classList.add('hidden');
-                notOwnedMsg.classList.remove('hidden');
+                const walletError = document.getElementById('wallet-error');
+                walletError.classList.remove('hidden');
             }
         }
         catch (error) {
             console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
+        }
+    }
+
+    function checkPassword() {
+        const password = document.getElementById('access-password').value;
+        const passwordError = document.getElementById('password-error');
+        const popup = document.getElementById('login-popup');
+        const buyButton = document.getElementById('custom-cart-btn');
+        const notOwnedMsg = document.getElementById('not-owned-msg');
+
+        if (password === atob('a3Vtbw==') ) { // TODO
+            popup.classList.add('hidden');
+            buyButton.classList.remove('hidden');
+            notOwnedMsg.classList.add('hidden');
+        } else {
+            passwordError.textContent = "Incorrect password";
+            passwordError.classList.remove('hidden');
         }
     }
 
