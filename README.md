@@ -44,3 +44,15 @@ window.addEventListener("suiconnect-wallet-change", (event) => {
     });
 });
 ```
+
+4. Style the connect button to your liking:
+
+```css
+#suiconnect-root button {
+    background: blue;
+    color: white;
+}
+#suiconnect-root button.disconnect {
+    background: red;
+}
+```
