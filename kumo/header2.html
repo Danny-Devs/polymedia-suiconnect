@@ -79,6 +79,14 @@
         margin: 0;
     }
 
+    .password-section form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+    }
+
     .password-section input[type="password"] {
         padding: 8px 12px;
         border: 1px solid #ccc;
@@ -107,9 +115,11 @@
 
             <div class="option-section password-section">
                 <h3>Option 2: Enter Password</h3>
-                <input type="password" id="access-password" placeholder="Enter access password">
-                <button onclick="checkPassword()">SUBMIT</button>
-                <p id="password-error" class="error-message hidden">Incorrect password</p>
+                <form id="password-form" onsubmit="onSubmitPassword(event)">
+                    <input type="password" id="access-password" placeholder="Enter access password">
+                    <button type="submit">SUBMIT</button>
+                    <p id="password-error" class="error-message hidden">Incorrect password</p>
+                </form>
             </div>
         </div>
     </div>
@@ -143,6 +153,11 @@
         catch (error) {
             console.warn("[suiconnect.onWalletChange] error checking NFT ownership:", error);
         }
+    }
+
+    function onSubmitPassword(event) {
+        event.preventDefault();
+        checkPassword();
     }
 
     function checkPassword() {
