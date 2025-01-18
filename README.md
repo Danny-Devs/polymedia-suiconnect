@@ -4,7 +4,7 @@ Add a Sui wallet connector anywhere.
 
 ## Installation
 
-1. Add this to your HTML where you want the wallet button to appear:
+1. Add this where you want the wallet button to appear:
 
 ```html
 <div id="suiconnect-root"></div>

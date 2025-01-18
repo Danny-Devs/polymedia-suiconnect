@@ -4,7 +4,7 @@
     "name": "@polymedia/suiconnect",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://suiconnect.polymedia.app",
-    "description": "Shopify wallet connector for Sui",
+    "description": "Add a Sui wallet connector anywhere",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
