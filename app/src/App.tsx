@@ -3,7 +3,7 @@ import "@mysten/dapp-kit/dist/index.css";
 import { SuiClient } from "@mysten/sui/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import "./App.less";
+import "./App.css";
 
 type WalletChangeDetail = {
     client: SuiClient;
