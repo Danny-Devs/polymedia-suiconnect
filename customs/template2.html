@@ -90,22 +90,6 @@
     </section>
 
     <script>
-        // ShopiSui event handling
-        window.addEventListener('nft-ownership-check', (event) => {
-            const popup = document.getElementById('login-popup');
-            popup.classList.add('hidden');
-
-            const buyButton = document.getElementById('custom-cart-btn');
-            const notOwnedMsg = document.getElementById('not-owned-msg');
-            if (event.detail.ownsNft) {
-                buyButton.classList.remove('hidden');
-                notOwnedMsg.classList.add('hidden');
-            } else {
-                buyButton.classList.add('hidden');
-                notOwnedMsg.classList.remove('hidden');
-            }
-        });
-
         // Popup Cart Trigger
         document.getElementById('custom-cart-btn').addEventListener('click', function () {
             const addToCartButton = document.querySelector('[name="add"]'); // Adjust for product form button
