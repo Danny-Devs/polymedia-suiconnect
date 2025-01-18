@@ -126,10 +126,7 @@
             console.debug("[suiconnect.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
             if (ownsNft) {
-                const popup = document.getElementById("login-popup");
-                const buyButton = document.getElementById("custom-cart-btn");
-                popup.classList.add("hidden");
-                buyButton.classList.remove("hidden");
+                hidePopupAndShowBuyButton();
             } else {
                 const walletError = document.getElementById("wallet-error");
                 walletError.classList.remove("hidden");
@@ -143,16 +140,20 @@
     function checkPassword() {
         const password = document.getElementById("access-password").value;
         const passwordError = document.getElementById("password-error");
-        const popup = document.getElementById("login-popup");
-        const buyButton = document.getElementById("custom-cart-btn");
 
         if (password === atob("a3Vtbw==") ) { // TODO
-            popup.classList.add("hidden");
-            buyButton.classList.remove("hidden");
+            hidePopupAndShowBuyButton();
         } else {
             passwordError.textContent = "Incorrect password";
             passwordError.classList.remove("hidden");
         }
+    }
+
+    function hidePopupAndShowBuyButton() {
+        const popup = document.getElementById("login-popup");
+        const buyButton = document.getElementById("custom-cart-btn");
+        popup.classList.add("hidden");
+        buyButton.classList.remove("hidden");
     }
 
     async function checkNftOwnership({ structType, address })
