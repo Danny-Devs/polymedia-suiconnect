@@ -1,6 +1,7 @@
 <script>
     // === Load and initialize ShopiSui ===
-    (function() {
+
+    (() => {
         // Load ShopiSui CSS
         const cssLink = document.createElement("link");
         cssLink.rel = "stylesheet";
@@ -19,22 +20,6 @@
 
     // === Your custom code ===
 
-    // ShopiSui event handling
-    window.addEventListener('nft-ownership-check', (event) => {
-        const popup = document.getElementById('login-popup');
-        popup.classList.add('hidden');
-
-        const buyButton = document.getElementById('custom-cart-btn');
-        const notOwnedMsg = document.getElementById('not-owned-msg');
-        if (event.detail.ownsNft) {
-            buyButton.classList.remove('hidden');
-            notOwnedMsg.classList.add('hidden');
-        } else {
-            buyButton.classList.add('hidden');
-            notOwnedMsg.classList.remove('hidden');
-        }
-    });
-
     const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
 
     async function onWalletChange(walletEvent) {
@@ -47,10 +32,18 @@
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
-            const nftOwnerEvent = new CustomEvent('nft-ownership-check', {
-                detail: { address, ownsNft }
-            });
-            window.dispatchEvent(nftOwnerEvent);
+            const popup = document.getElementById('login-popup');
+            popup.classList.add('hidden');
+
+            const buyButton = document.getElementById('custom-cart-btn');
+            const notOwnedMsg = document.getElementById('not-owned-msg');
+            if (ownsNft) {
+                buyButton.classList.remove('hidden');
+                notOwnedMsg.classList.add('hidden');
+            } else {
+                buyButton.classList.add('hidden');
+                notOwnedMsg.classList.remove('hidden');
+            }
         }
         catch (error) {
             console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
