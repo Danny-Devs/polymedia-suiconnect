@@ -110,7 +110,8 @@
                 <h3>Option 1: Connect Wallet</h3>
                 <p>Connect wallet to verify NFT ownership</p>
                 <div id="suiconnect-root"></div>
-                <p id="wallet-error" class="error-message hidden">No NFT found in connected wallet</p>
+                <p id="wallet-loading" class="hidden">Loading...</p>
+                <p id="wallet-error" class="error-message hidden">No Kumo NFT found in connected wallet</p>
             </div>
 
             <div class="option-section password-section">
@@ -140,13 +141,20 @@
             const { address } = walletEvent.detail;
             if (!address) { return; }
 
+            const walletLoading = document.getElementById("wallet-loading");
+            const walletError = document.getElementById("wallet-error");
+
+            walletError.classList.add("hidden");
+            walletLoading.classList.remove("hidden");
+
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[suiconnect.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
+
+            walletLoading.classList.add("hidden");
 
             if (ownsNft) {
                 hidePopupAndShowBuyButton();
             } else {
-                const walletError = document.getElementById("wallet-error");
                 walletError.classList.remove("hidden");
             }
         }
