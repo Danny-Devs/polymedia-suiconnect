@@ -108,10 +108,10 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', showPopup);
+    document.addEventListener("DOMContentLoaded", showPopup);
     function showPopup() {
-        const popup = document.getElementById('login-popup');
-        popup.style.display = 'flex';
+        const popup = document.getElementById("login-popup");
+        popup.style.display = "flex";
     }
 
     window.addEventListener("suiconnect-wallet-change", onWalletChange);
@@ -120,22 +120,19 @@
         const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
         try {
             const { address } = walletEvent.detail;
-            console.debug("[suiconnect.onWalletChange] wallet address:", address);
-
             if (!address) { return; }
 
             const ownsNft = await checkNftOwnership({ structType, address });
             console.debug("[suiconnect.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
             if (ownsNft) {
-                const popup = document.getElementById('login-popup');
-                const buyButton = document.getElementById('custom-cart-btn');
-
-                popup.classList.add('hidden');
-                buyButton.classList.remove('hidden');
+                const popup = document.getElementById("login-popup");
+                const buyButton = document.getElementById("custom-cart-btn");
+                popup.classList.add("hidden");
+                buyButton.classList.remove("hidden");
             } else {
-                const walletError = document.getElementById('wallet-error');
-                walletError.classList.remove('hidden');
+                const walletError = document.getElementById("wallet-error");
+                walletError.classList.remove("hidden");
             }
         }
         catch (error) {
@@ -144,17 +141,17 @@
     }
 
     function checkPassword() {
-        const password = document.getElementById('access-password').value;
-        const passwordError = document.getElementById('password-error');
-        const popup = document.getElementById('login-popup');
-        const buyButton = document.getElementById('custom-cart-btn');
+        const password = document.getElementById("access-password").value;
+        const passwordError = document.getElementById("password-error");
+        const popup = document.getElementById("login-popup");
+        const buyButton = document.getElementById("custom-cart-btn");
 
-        if (password === atob('a3Vtbw==') ) { // TODO
-            popup.classList.add('hidden');
-            buyButton.classList.remove('hidden');
+        if (password === atob("a3Vtbw==") ) { // TODO
+            popup.classList.add("hidden");
+            buyButton.classList.remove("hidden");
         } else {
             passwordError.textContent = "Incorrect password";
-            passwordError.classList.remove('hidden');
+            passwordError.classList.remove("hidden");
         }
     }
 

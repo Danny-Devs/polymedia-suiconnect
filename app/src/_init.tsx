@@ -15,4 +15,4 @@ if (import.meta.env.MODE === "development") {
 }
 
 // export initialization function for production use
-(window as any).suiconnectInit = init;
+(window as any).suiconnectInit = init; // eslint-disable-line
