@@ -93,7 +93,7 @@
             <div class="option-section wallet-section">
                 <h3>Option 1: Connect Wallet</h3>
                 <p>Connect wallet to verify NFT ownership</p>
-                <div id="shopisui-root"></div>
+                <div id="suiconnect-root"></div>
                 <p id="wallet-error" class="error-message hidden">No NFT found in connected wallet</p>
             </div>
 
@@ -118,17 +118,17 @@
         showPopup();
     });
 
-    window.addEventListener("shopisui-wallet-change", async (walletEvent) =>
+    window.addEventListener("suiconnect-wallet-change", async (walletEvent) =>
     {
         const structType = "0x57191e5e5c41166b90a4b7811ad3ec7963708aa537a8438c1761a5d33e2155fd::kumo::Kumo";
         try {
             const { address } = walletEvent.detail;
-            console.debug("[shopisui.onWalletChange] wallet address:", address);
+            console.debug("[suiconnect.onWalletChange] wallet address:", address);
 
             if (!address) { return; }
 
             const ownsNft = await checkNftOwnership({ structType, address });
-            console.debug("[shopisui.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
+            console.debug("[suiconnect.onWalletChange] owns NFT:", ownsNft ? "yes" : "no");
 
             if (ownsNft) {
                 const popup = document.getElementById('login-popup');
@@ -144,7 +144,7 @@
             }
         }
         catch (error) {
-            console.warn("[shopisui.onWalletChange] error checking NFT ownership:", error);
+            console.warn("[suiconnect.onWalletChange] error checking NFT ownership:", error);
         }
     });
 

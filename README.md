@@ -1,39 +1,46 @@
-# ShopiSui - Shopify wallet connector for Sui
+# SuiConnect
+
+Add a Sui wallet connector anywhere.
 
 ## Installation
 
-1. Add this to your HTML where you want to display the [CONNECT WALLET] button:
+1. Add this to your HTML where you want the wallet button to appear:
 
 ```html
-<div id="shopisui-root"></div>
+<div id="suiconnect-root"></div>
 ```
 
-2. Load ShopiSui into your page by adding this to the `<head>` section of your HTML:
+2. Add the loader script to the `<head>` section of your page:
+
 ```html
 <script>
-    // === Load and initialize ShopiSui ===
+    // === Load and initialize SuiConnect ===
     (() => {
         // CSS
         const cssLink = document.createElement("link");
         cssLink.rel = "stylesheet";
-        cssLink.href = "https://shopisui.polymedia.app/assets/index-BRDBaH6M.css";
+        cssLink.href = "https://suiconnect.polymedia.app/assets/index-BkxlsyJb.css";
         document.head.appendChild(cssLink);
 
         // JS
         const script = document.createElement("script");
-        script.src = "https://shopisui.polymedia.app/assets/index-SdeMN7eJ.js";
-        script.onload = function() {
-            window.shopisuiInit();
-        };
+        script.src = "https://suiconnect.polymedia.app/assets/index-2bFCJb6z.js";
+        script.onload = () => window.suiconnectInit();
         document.body.appendChild(script);
     })();
 </script>
 ```
 
-3. Listen to the `shopisui-wallet-change` event in your JavaScript code to get the wallet address and handle the wallet change:
+3. Handle wallet connections:
+
 ```js
-window.addEventListener("shopisui-wallet-change", (walletEvent) => {
-    const { client, address } = walletEvent.detail;
-    console.log("Wallet change:", address);
+window.addEventListener("suiconnect-wallet-change", (event) => {
+    const { client, address } = event.detail;
+    // address is a string or null when not connected
+    console.log("Connected wallet:", address);
+    // client is a SuiClient instance
+    client.getLatestSuiSystemState().then(state => {
+        console.log("Current epoch:", state.epoch);
+    });
 });
 ```

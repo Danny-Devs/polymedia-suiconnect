@@ -1,22 +1,22 @@
 {
     "private": true,
     "version": "0.0.0",
-    "name": "@polymedia/shopisui",
+    "name": "@polymedia/suiconnect",
     "author": "@juzybits (https://polymedia.app)",
-    "homepage": "https://shopisui.polymedia.app",
+    "homepage": "https://suiconnect.polymedia.app",
     "description": "Shopify wallet connector for Sui",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/juzybits/polymedia-shopisui"
+        "url": "https://github.com/juzybits/polymedia-suiconnect"
     },
     "keywords": [],
     "scripts": {
         "build": "vite build",
         "clean": "rm -rf dist/ node_modules/ .wrangler/",
-        "deploy-dev": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-shopisui --branch dev",
-        "deploy-test": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-shopisui --branch test",
-        "deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-shopisui --branch main",
+        "deploy-dev": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-suiconnect --branch dev",
+        "deploy-test": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-suiconnect --branch test",
+        "deploy-prod": "pnpm build && wrangler pages deploy dist/ --project-name polymedia-suiconnect --branch main",
         "dev": "vite",
         "host": "vite --host",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",

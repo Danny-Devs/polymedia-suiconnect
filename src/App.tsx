@@ -12,8 +12,8 @@ type WalletChangeDetail = {
 
 const emitWalletChangeEvent = (client: SuiClient, address: string | null) => {
     const detail: WalletChangeDetail = { client, address };
-    const event = new CustomEvent("shopisui-wallet-change", { detail });
-    console.debug("[shopisui] wallet changed:", detail);
+    const event = new CustomEvent("suiconnect-wallet-change", { detail });
+    console.debug("[suiconnect] wallet changed:", detail);
     window.dispatchEvent(event);
 };
 
@@ -48,7 +48,7 @@ const App = () =>
         emitWalletChangeEvent(suiClient, currAcct?.address ?? null);
     }, [currAcct, suiClient]);
 
-    return <div id="shopisui">
+    return <div id="suiconnect">
         <ConnectModal
             trigger={<></>}
             open={isOpen}
