@@ -3,14 +3,18 @@
 <head>
     <title>SuiConnect Demo</title>
     <!-- 1. Load SuiConnect CSS and JS -->
-    <link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index.css">
-    <script defer src="https://suiconnect.polymedia.app/assets/index.js" onload="window.suiconnectInit()"></script>
+    <link rel="stylesheet" href="http://localhost:1234/assets/index.css">
+    <script defer src="http://localhost:1234/assets/index.js" onload="window.suiconnectInit()"></script>
 </head>
 <body>
     <h2>SuiConnect Demo</h2>
 
     <!-- 2. The wallet button will appear here -->
     <div id="suiconnect-root"></div>
+
+    <div style="margin: 10px 0;">
+        Status: <span id="status">Disconnected</span>
+    </div>
 
     <div id="actions" style="display: none; margin-top: 20px;">
         <h3>Example actions:</h3>
@@ -24,21 +28,28 @@
         let suiConnect = null;
         window.addEventListener("suiconnect-wallet-change", (event) => {
             suiConnect = event.detail;
-            showOrHideActions();
-            console.log("[handler] connected wallet:", suiConnect.address);
+            updateUI();
         });
 
-        function showOrHideActions() {
-            const isConnected = !!suiConnect.address;
-            document.getElementById("actions").style.display = isConnected ? "block" : "none";
+        function updateUI() {
+            const actions = document.getElementById("actions");
+            const status = document.getElementById('status');
+
+            const address = suiConnect.address;
+            actions.style.display = address ? "block" : "none";
+            status.textContent = address
+                ? `Connected as ${address.slice(0,6)}...${address.slice(-4)}`
+                : 'Disconnected';
         }
     </script>
 
     <!-- Example actions -->
     <script>
         async function getSuiBalance() {
-            const client = new suiConnect.SuiClient({ url: "https://fullnode.mainnet.sui.io:443" });
             try {
+                const client = new suiConnect.SuiClient({
+                    url: "https://fullnode.mainnet.sui.io:443"
+                });
                 const balance = await client.getBalance({
                     owner: suiConnect.address,
                     coinType: "0x2::sui::SUI"
