@@ -1,6 +1,7 @@
 import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, useSuiClient, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -11,6 +12,7 @@ type WalletChangeDetail = {
     signTransaction: unknown;
     signAndExecuteTransaction: unknown;
     signPersonalMessage: unknown;
+    Transaction: typeof Transaction;
 };
 
 const emitWalletChangeEvent = (detail: WalletChangeDetail) => {
@@ -57,6 +59,7 @@ const App = () =>
             signTransaction,
             signAndExecuteTransaction,
             signPersonalMessage,
+            Transaction,
         });
     }, [currAcct]);
 
