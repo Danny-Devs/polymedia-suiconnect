@@ -2,9 +2,9 @@
 <html>
 <head>
     <title>SuiConnect Demo</title>
-    <!-- 1. Load SuiConnect CSS and JS -->
-    <link rel="stylesheet" href="http://localhost:1234/assets/index.css">
-    <script defer src="http://localhost:1234/assets/index.js" onload="window.suiconnectInit()"></script>
+    <!-- 1. Load SuiConnect -->
+    <link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index.css">
+    <script defer src="https://suiconnect.polymedia.app/assets/index.js" onload="window.suiconnectInit()"></script>
 </head>
 <body>
     <h2>SuiConnect Demo</h2>
@@ -12,39 +12,42 @@
     <!-- 2. The wallet button will appear here -->
     <div id="suiconnect-root"></div>
 
+    <!-- Example UI -->
     <div style="margin: 10px 0;">
         Status: <span id="status">Disconnected</span>
     </div>
 
     <div id="actions" style="display: none; margin-top: 20px;">
-        <h3>Example actions:</h3>
+        <h3>Actions:</h3>
         <button onclick="getSuiBalance()">Get Balance</button>
         <button onclick="signMessage()">Sign Message</button>
         <button onclick="signAndExecuteTx()">Execute Transaction</button>
     </div>
 
-    <!-- 3. Handle wallet connections -->
+    <!-- 3. Handle wallet connect/disconnect -->
     <script>
+        window.addEventListener("suiconnect-wallet-change", yourHandler);
+
+        // === Example handler and Sui wallet / RPC actions ===
+
         let suiConnect = null;
-        window.addEventListener("suiconnect-wallet-change", (event) => {
+
+        function yourHandler(event) {
             suiConnect = event.detail;
             updateUI();
-        });
+        }
 
         function updateUI() {
-            const actions = document.getElementById("actions");
             const status = document.getElementById('status');
+            const actions = document.getElementById("actions");
 
             const address = suiConnect.address;
-            actions.style.display = address ? "block" : "none";
             status.textContent = address
                 ? `Connected as ${address.slice(0,6)}...${address.slice(-4)}`
                 : 'Disconnected';
+            actions.style.display = address ? "block" : "none";
         }
-    </script>
 
-    <!-- Example actions -->
-    <script>
         async function getSuiBalance() {
             try {
                 const client = new suiConnect.SuiClient({
