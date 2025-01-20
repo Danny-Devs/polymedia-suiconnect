@@ -16,47 +16,59 @@
     <!-- 2. The wallet button will appear here -->
     <div id="suiconnect-root"></div>
 
+    <div id="actions" style="display: none; margin-top: 20px;">
+        <button onclick="getEpoch()">Get Current Epoch</button>
+        <button onclick="signMessage()">Sign Message</button>
+        <button onclick="signAndExecuteTx()">Execute Transaction</button>
+    </div>
+
     <!-- 3. Handle wallet connections -->
     <script>
+        let suiConnect = null;
         window.addEventListener("suiconnect-wallet-change", (event) => {
-            const {
-                address, // string or null when not connected
-                signPersonalMessage, // prompt the user to sign and execute a tx with their wallet
-                signAndExecuteTransaction, // prompt the user to sign and execute a tx with their wallet
-                signTransaction, // prompt the user to sign a tx with their wallet (to be executed by SuiCLient)
-                SuiClient, // SuiClient class
-                Transaction, // Transaction class
-            } = event.detail;
-
-            // address is a string or null when not connected
-            console.log("[handler] connected wallet:", address);
-
-            // SuiClient can be used to interact with Sui via RPC calls
-            const client = new SuiClient({ url: "https://fullnode.mainnet.sui.io:443" });
-            client.getLatestSuiSystemState().then(state => {
-                console.log("[handler] current epoch:", state.epoch);
-            });
-
-            if (!address) return;
-
-            // prompt the user to sign a message with their wallet
-            signPersonalMessage({
-                message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
-            }).then(result => {
-                console.log("[handler] sign success:", result);
-            }).catch(error => {
-                console.warn("[handler] sign failed:", error);
-            });
-
-            // prompt the user to approve a transaction with their wallet
-            // signAndExecuteTransaction({
-            //     transaction: new Transaction(), // a tx that does nothing
-            // }).then(result => {
-            //     console.log("[handler] tx result:", result);
-            // }).catch(error => {
-            //     console.warn("[handler] tx error:", error);
-            // });
+            suiConnect = event.detail;
+            showOrHideActions();
+            console.log("[handler] connected wallet:", suiConnect.address);
         });
+
+        function showOrHideActions() {
+            const isConnected = !!suiConnect.address;
+            document.getElementById("actions").style.display = isConnected ? "block" : "none";
+        }
+
+        // Action handlers
+        async function getEpoch() {
+            const client = new suiConnect.SuiClient({ url: "https://fullnode.mainnet.sui.io:443" });
+            try {
+                const state = await client.getLatestSuiSystemState();
+                alert(`Current epoch: ${state.epoch}`);
+            } catch (error) {
+                alert(`Failed to get epoch: ${error}`);
+            }
+        }
+
+        async function signMessage() {
+            try {
+                const result = await suiConnect.signPersonalMessage({
+                    message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
+                });
+                alert(`Message signed successfully: ${result}`);
+            } catch (error) {
+                alert(`Failed to sign message: ${error}`);
+            }
+        }
+
+        async function signAndExecuteTx() {
+            try {
+                const result = await suiConnect.signAndExecuteTransaction({
+                    transaction: new suiConnect.Transaction(),
+                });
+                alert("Transaction executed successfully:", result);
+            } catch (error) {
+                alert(`Failed to execute transaction: ${error}`);
+            }
+        }
+
     </script>
 </body>
 </html>
