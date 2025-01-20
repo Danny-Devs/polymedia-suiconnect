@@ -6,9 +6,39 @@ If you need to interact with Sui in a plain HTML/JS page and can't use libraries
 
 ## How to use
 
-See [src/demo/index.html](./src/demo/index.html) for a working example.
+1. Load SuiConnect in your HTML `<head>`:
+```html
+<link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index.css">
+<script defer src="https://suiconnect.polymedia.app/assets/index.js" onload="window.suiconnectInit()"></script>
+```
 
-To try it locally:
+2. Add the wallet button container to your `<body>`:
+```html
+<div id="suiconnect-root"></div>
+```
+
+3. Handle wallet connect/disconnect:
+```html
+<script>
+window.addEventListener("suiconnect-wallet-change", (event) => {
+    const {
+        address, // string if connected, null if disconnected
+        signPersonalMessage, // prompt the user to sign a message
+        signAndExecuteTransaction, // prompt the user to sign and execute a tx
+        signTransaction, // prompt the user to sign a tx (to be executed with SuiClient)
+        SuiClient, // SuiClient class
+        Transaction, // Transaction class
+    } = event.detail;
+    // your code here
+});
+</script>
+```
+
+## Example
+
+A complete working example is in [src/demo/index.html](./src/demo/index.html).
+
+To try it locally, run the following commands and visit http://localhost:3333 in your browser.
 
 With Node:
 ```
@@ -21,5 +51,3 @@ With Python:
 cd src/demo/
 python3 -m http.server 3333
 ```
-
-Then visit http://localhost:3333 and open the browser console to see what's happening under the hood.
