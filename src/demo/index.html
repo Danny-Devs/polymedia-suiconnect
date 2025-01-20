@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>SuiConnect Demo</title>
-    <!-- 1. Load SuiConnect CSS -->
+    <!-- 1. Load SuiConnect CSS and JS -->
     <link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index-Ci8EKbxv.css">
+    <script defer src="https://31d0d636.polymedia-suiconnect.pages.dev/assets/index-Cil4I9Wj.js" onload="window.suiconnectInit()"></script>
 </head>
 <body>
     <h2>SuiConnect Demo</h2>
@@ -11,10 +12,7 @@
     <!-- 2. The wallet button will appear here -->
     <div id="suiconnect-root"></div>
 
-    <!-- 3. Load SuiConnect -->
-    <script defer src="https://31d0d636.polymedia-suiconnect.pages.dev/assets/index-Cil4I9Wj.js" onload="window.suiconnectInit()"></script>
-
-    <!-- 4. Handle wallet connections -->
+    <!-- 3. Handle wallet connections -->
     <script>
         window.addEventListener("suiconnect-wallet-change", (event) => {
             const {
