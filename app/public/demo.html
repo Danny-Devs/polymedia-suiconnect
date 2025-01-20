@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://60903fae.polymedia-suiconnect.pages.dev/assets/index-Ci8EKbxv.css">
 </head>
 <body>
+    <h2>SuiConnect Demo</h2>
+
     <!-- The wallet button will appear here -->
     <div id="suiconnect-root"></div>
 
@@ -25,11 +27,11 @@
             } = event.detail;
 
             // address is a string or null when not connected
-            console.log("[handler] Connected wallet:", address);
+            console.log("[handler] connected wallet:", address);
 
             // client is a SuiClient instance
             client.getLatestSuiSystemState().then(state => {
-                console.log("[handler] Current epoch:", state.epoch);
+                console.log("[handler] current epoch:", state.epoch);
             });
 
             if (!address) return;
@@ -37,10 +39,14 @@
             // prompt the user to sign a message with their wallet
             signPersonalMessage({
                 message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
-            }, {
-                onSuccess: (result) => console.log("Sign success:", result),
-                onError: (error) => console.error("Sign failed:", error),
+            }).then(result => {
+                console.log("[handler] sign success:", result);
+            }).catch(error => {
+                console.error("[handler] sign failed:", error);
             });
+
+            // prompt the user to approve a transaction with their wallet
+
         });
     </script>
 </body>

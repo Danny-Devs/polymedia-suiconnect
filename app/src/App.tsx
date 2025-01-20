@@ -32,7 +32,7 @@ export const WalletConnector = () =>
     return (
         <QueryClientProvider client={queryClient}>
             <SuiClientProvider networks={networkConfig} network="mainnet">
-                <WalletProvider autoConnect={false}>
+                <WalletProvider autoConnect={true}>
                     <App />
                 </WalletProvider>
             </SuiClientProvider>
@@ -47,8 +47,8 @@ const App = () =>
     const currAcct = useCurrentAccount();
     const { mutate: disconnect } = useDisconnectWallet();
 	const { mutateAsync: signTransaction } = useSignTransaction();
-	const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-	const { mutate: signPersonalMessage } = useSignPersonalMessage();
+	const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+	const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
 
     const [isOpen, setIsOpen] = useState(false);
 
