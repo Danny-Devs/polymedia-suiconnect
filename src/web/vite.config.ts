@@ -1,5 +1,6 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
+import pkg from "./package.json";
 
 export default defineConfig({
     plugins: [
@@ -9,10 +10,9 @@ export default defineConfig({
         chunkSizeWarningLimit: 1000,
         rollupOptions: {
             output: {
-                // disable hashing for assets
-                assetFileNames: 'assets/[name][extname]',  // CSS, images, fonts, etc
-                entryFileNames: 'assets/[name].js',        // main JS entry points
-                chunkFileNames: 'assets/[name].js',        // dynamic imports & vendor chunks
+                // use version from package.json
+                assetFileNames: `assets/[name]-${pkg.version}[extname]`,  // CSS, images, fonts, etc
+                entryFileNames: `assets/[name]-${pkg.version}.js`,        // main JS entry points
             }
         }
     },
