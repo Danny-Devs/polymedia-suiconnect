@@ -1,4 +1,4 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSuiClient, WalletProvider } from "@mysten/dapp-kit";
+import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, useSuiClient, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { SuiClient } from "@mysten/sui/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,12 +8,14 @@ import "./App.css";
 type WalletChangeDetail = {
     client: SuiClient;
     address: string | null;
+    signTransaction: unknown;
+    signAndExecuteTransaction: unknown;
+    signPersonalMessage: unknown;
 };
 
-const emitWalletChangeEvent = (client: SuiClient, address: string | null) => {
-    const detail: WalletChangeDetail = { client, address };
+const emitWalletChangeEvent = (detail: WalletChangeDetail) => {
     const event = new CustomEvent("suiconnect-wallet-change", { detail });
-    console.debug("[suiconnect] wallet change:", address);
+    console.debug("[suiconnect] wallet change:", detail.address);
     window.dispatchEvent(event);
 };
 
@@ -38,15 +40,25 @@ export const WalletConnector = () =>
 
 const App = () =>
 {
+
+    const suiClient = useSuiClient();
     const currAcct = useCurrentAccount();
     const { mutate: disconnect } = useDisconnectWallet();
-    const suiClient = useSuiClient();
+	const { mutateAsync: signTransaction } = useSignTransaction();
+	const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+	const { mutate: signPersonalMessage } = useSignPersonalMessage();
 
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        emitWalletChangeEvent(suiClient, currAcct?.address ?? null);
-    }, [currAcct, suiClient]);
+        emitWalletChangeEvent({
+            client: suiClient,
+            address: currAcct?.address ?? null,
+            signTransaction,
+            signAndExecuteTransaction,
+            signPersonalMessage,
+        });
+    }, [currAcct]);
 
     return <div id="suiconnect">
         <ConnectModal
