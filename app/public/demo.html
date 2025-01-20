@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SuiConnect Demo</title>
+    <!-- Load SuiConnect CSS -->
+    <link rel="stylesheet" href="https://60903fae.polymedia-suiconnect.pages.dev/assets/index-Ci8EKbxv.css">
+</head>
+<body>
+    <!-- The wallet button will appear here -->
+    <div id="suiconnect-root"></div>
+
+    <!-- Load SuiConnect -->
+    <script defer src="https://60903fae.polymedia-suiconnect.pages.dev/assets/index-CRCV8YET.js" onload="window.suiconnectInit()"></script>
+
+    <script>
+        // Handle wallet connections
+        window.addEventListener("suiconnect-wallet-change", (event) => {
+            const {
+                address,
+                client,
+                signTransaction,
+                signAndExecuteTransaction,
+                signPersonalMessage,
+                Transaction,
+            } = event.detail;
+
+            // address is a string or null when not connected
+            console.log("[handler] Connected wallet:", address);
+
+            // client is a SuiClient instance
+            client.getLatestSuiSystemState().then(state => {
+                console.log("[handler] Current epoch:", state.epoch);
+            });
+
+            if (!address) return;
+
+            // prompt the user to sign a message with their wallet
+            signPersonalMessage({
+                message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
+            }, {
+                onSuccess: (result) => console.log("Sign success:", result),
+                onError: (error) => console.error("Sign failed:", error),
+            });
+        });
+    </script>
+</body>
+</html>

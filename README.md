@@ -19,12 +19,12 @@ Add a Sui wallet connector anywhere.
         // CSS
         const cssLink = document.createElement("link");
         cssLink.rel = "stylesheet";
-        cssLink.href = "https://suiconnect.polymedia.app/assets/index-Ci8EKbxv.css";
+        cssLink.href = "https://60903fae.polymedia-suiconnect.pages.dev/assets/index-Ci8EKbxv.css";
         document.head.appendChild(cssLink);
 
         // JS
         const script = document.createElement("script");
-        script.src = "https://suiconnect.polymedia.app/assets/index-BRGtAXLz.js";
+        script.src = "https://60903fae.polymedia-suiconnect.pages.dev/assets/index-CRCV8YET.js";
         script.onload = () => window.suiconnectInit();
         document.body.appendChild(script);
     })();

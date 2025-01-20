@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 type WalletChangeDetail = {
-    client: SuiClient;
     address: string | null;
+    client: SuiClient;
     signTransaction: unknown;
     signAndExecuteTransaction: unknown;
     signPersonalMessage: unknown;
@@ -54,8 +54,8 @@ const App = () =>
 
     useEffect(() => {
         emitWalletChangeEvent({
-            client: suiClient,
             address: currAcct?.address ?? null,
+            client: suiClient,
             signTransaction,
             signAndExecuteTransaction,
             signPersonalMessage,
