@@ -3,8 +3,12 @@
 <head>
     <title>SuiConnect Demo</title>
     <!-- 1. Load SuiConnect CSS and JS -->
-    <link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index.css">
-    <script defer src="https://suiconnect.polymedia.app/assets/index.js" onload="window.suiconnectInit()"></script>
+    <!-- TODO uncomment when ready -->
+    <!-- <link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index.css">
+    <script defer src="https://suiconnect.polymedia.app/assets/index.js" onload="window.suiconnectInit()"></script> -->
+
+    <link rel="stylesheet" href="http://localhost:1234/assets/index.css">
+    <script defer src="http://localhost:1234/assets/index.js" onload="window.suiconnectInit()"></script>
 </head>
 <body>
     <h2>SuiConnect Demo</h2>
@@ -17,17 +21,18 @@
         window.addEventListener("suiconnect-wallet-change", (event) => {
             const {
                 address, // string or null when not connected
-                client, // SuiClient instance
-                signTransaction, // prompt the user to sign a tx with their wallet
-                signAndExecuteTransaction, // prompt the user to sign and execute a tx with their wallet
                 signPersonalMessage, // prompt the user to sign and execute a tx with their wallet
+                signAndExecuteTransaction, // prompt the user to sign and execute a tx with their wallet
+                signTransaction, // prompt the user to sign a tx with their wallet (to be executed by SuiCLient)
+                SuiClient, // SuiClient class
                 Transaction, // Transaction class
             } = event.detail;
 
             // address is a string or null when not connected
             console.log("[handler] connected wallet:", address);
 
-            // client is a SuiClient instance
+            // SuiClient can be used to interact with Sui via RPC calls
+            const client = new SuiClient({ url: "https://fullnode.mainnet.sui.io:443" });
             client.getLatestSuiSystemState().then(state => {
                 console.log("[handler] current epoch:", state.epoch);
             });

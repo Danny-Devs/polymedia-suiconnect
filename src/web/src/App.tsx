@@ -1,4 +1,4 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, useSuiClient, WalletProvider } from "@mysten/dapp-kit";
+import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
@@ -8,10 +8,10 @@ import "./App.css";
 
 type WalletChangeDetail = {
     address: string | null;
-    client: SuiClient;
-    signTransaction: unknown;
-    signAndExecuteTransaction: unknown;
     signPersonalMessage: unknown;
+    signAndExecuteTransaction: unknown;
+    signTransaction: unknown;
+    SuiClient: typeof SuiClient;
     Transaction: typeof Transaction;
 };
 
@@ -43,22 +43,21 @@ export const WalletConnector = () =>
 const App = () =>
 {
 
-    const suiClient = useSuiClient();
     const currAcct = useCurrentAccount();
-    const { mutate: disconnect } = useDisconnectWallet();
-	const { mutateAsync: signTransaction } = useSignTransaction();
-	const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
 	const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
+	const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+	const { mutateAsync: signTransaction } = useSignTransaction();
+    const { mutate: disconnect } = useDisconnectWallet();
 
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         emitWalletChangeEvent({
             address: currAcct?.address ?? null,
-            client: suiClient,
-            signTransaction,
-            signAndExecuteTransaction,
             signPersonalMessage,
+            signAndExecuteTransaction,
+            signTransaction,
+            SuiClient,
             Transaction,
         });
     }, [currAcct]);
