@@ -7,6 +7,14 @@ export default defineConfig({
     ],
     build: {
         chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                // disable hashing for assets
+                assetFileNames: 'assets/[name][extname]',  // CSS, images, fonts, etc
+                entryFileNames: 'assets/[name].js',        // main JS entry points
+                chunkFileNames: 'assets/[name].js',        // dynamic imports & vendor chunks
+            }
+        }
     },
     preview: {
         port: 1234,
