@@ -12,15 +12,20 @@ If you need to interact with Sui in a plain HTML/JS page and can't use libraries
 <script defer src="https://suiconnect.polymedia.app/assets/index-1.0.0.js" onload="window.suiconnectInit()"></script>
 ```
 
-2. Add the wallet button container to your `<body>`:
+2. Add the wallet button to your `<body>`:
 ```html
-<div id="suiconnect-root"></div>
+<div id="suiconnect-root">
+    <div id="suiconnect">
+        <button disabled class="btn connect">CONNECT WALLET</button>
+    </div>
+</div>
 ```
 
 3. Handle wallet connect/disconnect:
 ```html
 <script>
 window.addEventListener("suiconnect-wallet-change", (event) => {
+    // You can use one or more of the following:
     const {
         address, // string if connected, null if disconnected
         signPersonalMessage, // prompt the user to sign a message
@@ -29,7 +34,7 @@ window.addEventListener("suiconnect-wallet-change", (event) => {
         SuiClient, // SuiClient class
         Transaction, // Transaction class
     } = event.detail;
-    // your code here
+    // ... your code here ...
 });
 </script>
 ```
@@ -50,4 +55,17 @@ With Python:
 ```
 cd src/demo/
 python3 -m http.server 3333
+```
+
+## Styling
+
+You can style the wallet button and its container with these CSS selectors:
+
+```css
+#suiconnect-root {
+}
+#suiconnect .btn {
+}
+#suiconnect .btn.disconnect {
+}
 ```
