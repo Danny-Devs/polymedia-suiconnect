@@ -2,7 +2,7 @@
 
 Add a Sui wallet connector anywhere.
 
-If you need to interact with Sui in a plain HTML/JS page and can't use libraries like `react`, `@mysten/sui`, `@mysten/dapp-kit`, SuiConnect has you covered.
+If you need to interact with Sui in a plain HTML/JS page and can't use libraries like `react` and `@mysten/dapp-kit`, SuiConnect has you covered.
 
 ## How to use
 
