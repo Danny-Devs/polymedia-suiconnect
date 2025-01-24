@@ -1,12 +1,12 @@
 import { createRoot } from "react-dom/client";
-import { defaultConfig, SuiConnect, SuiConnectConfig } from "./App";
+import { SuiConnect, SuiConnectConfig } from "./App";
 import { getFullnodeUrl } from "@mysten/sui/client";
 
-function init(cnf?: SuiConnectConfig) {
+function init(cnf: SuiConnectConfig) {
     const container = document.getElementById("suiconnect-root");
     if (container) {
         const root = createRoot(container);
-        root.render(<SuiConnect {...cnf} />);
+        root.render(<SuiConnect cnf={cnf} />);
     }
 }
 
