@@ -8,8 +8,8 @@ If you need to interact with Sui in a plain HTML/JS page and can't use libraries
 
 1. Load SuiConnect in your HTML `<head>`:
 ```html
-<link rel="stylesheet" href="https://suiconnect.polymedia.app/assets/index-1.0.0.css">
-<script defer src="https://suiconnect.polymedia.app/assets/index-1.0.0.js" onload="window.suiconnectInit()"></script>
+<link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
+<script defer src="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.js" onload="window.suiconnectInit()"></script>
 ```
 
 2. Add the wallet button to your `<body>`:
