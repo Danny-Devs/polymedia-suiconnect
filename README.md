@@ -8,14 +8,13 @@ If you need to interact with Sui in a plain HTML/JS page and can't use libraries
 
 1. Load SuiConnect in your HTML `<head>`:
 ```html
-<link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
-<script defer src="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.js"
+<link rel="stylesheet" href="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.css">
+<script defer src="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.js"
     onload="window.suiconnectInit({
         rpcUrl: 'https://fullnode.mainnet.sui.io',
-        autoConnect: true
+        autoConnect: true,
     })">
 </script>
-
 ```
 
 2. Add the wallet button to your `<body>`:
@@ -79,10 +78,30 @@ SuiConnect is served via immutable CloudFlare URLs. Once added to your project, 
 
 ## Versions
 
+### 1.1.0
+
+Notes:
+- Uses `@mysten/sui@1.20.0` and `@mysten/dapp-kit@0.14.47`.
+- Adds configuration options for `rpcUrl` and `autoConnect`.
+- Exposes `SuiClient` instance instead of class.
+
+Installation:
+```
+<link rel="stylesheet" href="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.css">
+<script defer src="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.js"
+    onload="window.suiconnectInit({
+        rpcUrl: 'https://fullnode.mainnet.sui.io',
+        autoConnect: true,
+    })">
+</script>
+```
+
 ### 1.0.0
 
-Uses `@mysten/sui` 1.18.0 and `@mysten/dapp-kit` 0.14.44.
+Notes:
+- Uses `@mysten/sui@1.18.0` and `@mysten/dapp-kit@0.14.44`.
 
+Installation:
 ```html
 <link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
 <link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
