@@ -1,27 +1,34 @@
 import { ConnectModal, SuiClientProvider, SuiClientProviderContext, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
-import { SuiClient } from "@mysten/sui/client";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
 
 export type SuiConnectConfig = {
-    rpcUrl: string;
-    autoConnect: boolean;
+    rpcUrl?: string;
+    autoConnect?: boolean;
 };
 
-export const SuiConnect = ({ cnf }: {
-    cnf: SuiConnectConfig,
-}) => {
+export const defaultConfig: SuiConnectConfig = {
+    rpcUrl: getFullnodeUrl("mainnet"),
+    autoConnect: true
+};
+
+export const SuiConnect = ({
+    rpcUrl = defaultConfig.rpcUrl!,
+    autoConnect = defaultConfig.autoConnect!,
+}: SuiConnectConfig = defaultConfig
+) => {
     const queryClient = new QueryClient();
     const networkConfig = {
-        NetworkNameDoesntMatter: { url: cnf.rpcUrl }
+        NetworkNameDoesntMatter: { url: rpcUrl }
     };
     return (
         <QueryClientProvider client={queryClient}>
             <SuiClientProvider networks={networkConfig} network="NetworkNameDoesntMatter">
-                <WalletProvider autoConnect={cnf.autoConnect}>
+                <WalletProvider autoConnect={autoConnect}>
                     <App />
                 </WalletProvider>
             </SuiClientProvider>
