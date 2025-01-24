@@ -1,6 +1,6 @@
 {
     "private": true,
-    "version": "1.0.0",
+    "version": "1.1.0",
     "name": "@polymedia/suiconnect",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://suiconnect.polymedia.app",
@@ -24,27 +24,27 @@
         "typecheck": "tsc -b"
     },
     "dependencies": {
-        "@mysten/dapp-kit": "^0.14.44",
-        "@mysten/sui": "^1.18.0",
-        "@tanstack/react-query": "^5.62.8",
+        "@mysten/dapp-kit": "^0.14.47",
+        "@mysten/sui": "^1.20.0",
+        "@tanstack/react-query": "^5.64.2",
         "normalize.css": "^8.0.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
-        "@eslint/compat": "^1.2.4",
-        "@eslint/js": "^9.17.0",
-        "@stylistic/eslint-plugin": "^2.12.1",
+        "@eslint/compat": "^1.2.5",
+        "@eslint/js": "^9.18.0",
+        "@stylistic/eslint-plugin": "^2.13.0",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "@vitejs/plugin-react-swc": "^3.7.2",
-        "eslint": "^9.17.0",
+        "eslint": "^9.18.0",
         "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-react": "^7.37.2",
-        "typescript": "^5.7.2",
-        "typescript-eslint": "^8.18.1",
-        "vite": "^6.0.5",
-        "wrangler": "^3.99.0"
+        "eslint-plugin-react": "^7.37.4",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.21.0",
+        "vite": "^6.0.11",
+        "wrangler": "^3.105.0"
     },
     "type": "module",
     "sideEffects": false,
