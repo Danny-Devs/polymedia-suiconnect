@@ -40,10 +40,10 @@
 
         // === Example handler and Sui wallet / RPC actions ===
 
-        let suiConnect = null;
+        let suiconnect = null;
 
         function yourHandler(event) {
-            suiConnect = event.detail;
+            suiconnect = event.detail;
             updateUI();
         }
 
@@ -51,7 +51,7 @@
             const status = document.getElementById('status');
             const actions = document.getElementById("actions");
 
-            const address = suiConnect.address;
+            const address = suiconnect.address;
             status.textContent = address
                 ? `Connected as ${address.slice(0,6)}...${address.slice(-4)}`
                 : 'Disconnected';
@@ -59,9 +59,10 @@
         }
 
         async function getSuiBalance() {
+            const { client } = suiconnect;
             try {
-                const balance = await suiConnect.client.getBalance({
-                    owner: suiConnect.address,
+                const balance = await client.getBalance({
+                    owner: suiconnect.address,
                     coinType: "0x2::sui::SUI"
                 });
                 const totalBalance = Number(balance.totalBalance) / 1_000_000_000;
@@ -72,8 +73,9 @@
         }
 
         async function signMessage() {
+            const { signPersonalMessage } = suiconnect;
             try {
-                const resp = await suiConnect.signPersonalMessage({
+                const resp = await signPersonalMessage({
                     message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
                 });
                 alert(`Message signed successfully:\n\n${JSON.stringify(resp, null, 2)}`);
@@ -83,9 +85,12 @@
         }
 
         async function signAndExecuteTx() {
+            const { Transaction, signAndExecuteTransaction } = suiconnect;
             try {
-                const resp = await suiConnect.signAndExecuteTransaction({
-                    transaction: new suiConnect.Transaction(),
+                const tx = new Transaction();
+                const resp = await signAndExecuteTransaction({
+                    transaction: tx,
+                    options: { showEffects: true, showObjectChanges: true },
                 });
                 alert(`Transaction executed successfully. Digest: ${resp.digest}`);
             } catch (error) {

@@ -35,7 +35,7 @@ window.addEventListener("suiconnect-wallet-change", (event) => {
         address, // string if connected, null if disconnected
         signPersonalMessage, // prompt the user to sign a message
         signAndExecuteTransaction, // prompt the user to sign and execute a tx
-        signTransaction, // prompt the user to sign a tx (to be executed with a SuiClient)
+        signTransaction, // prompt the user to sign a tx (can then be executed with SuiClient)
         client, // SuiClient instance
         Transaction, // Transaction class
     } = event.detail;
