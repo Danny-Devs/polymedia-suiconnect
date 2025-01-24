@@ -43,15 +43,15 @@ window.addEventListener("suiconnect-wallet-change", (event) => {
 
 A complete working example is in [src/demo/index.html](./src/demo/index.html).
 
-To try it locally, run the following commands and visit http://localhost:3333 in your browser.
+To try it locally, run one of the following commands and visit http://localhost:3333 in your browser.
 
-With Node:
+Using Node:
 ```
 cd src/demo/
 npx http-server -p 3333
 ```
 
-With Python:
+Using Python:
 ```
 cd src/demo/
 python3 -m http.server 3333
@@ -62,10 +62,23 @@ python3 -m http.server 3333
 You can style the wallet button and its container with these CSS selectors:
 
 ```css
-#suiconnect-root {
-}
-#suiconnect .btn {
-}
-#suiconnect .btn.disconnect {
-}
+#suiconnect-root { /* ... */ }
+#suiconnect .btn { /* ... */ }
+#suiconnect .btn.disconnect { /* ... */ }
+```
+
+## Security
+
+SuiConnect is served via immutable CloudFlare URLs. Once added to your project, the code will never change unless you choose to update it.
+
+## Versions
+
+### 1.0.0
+
+Uses `@mysten/sui` 1.18.0 and `@mysten/dapp-kit` 0.14.44.
+
+```html
+<link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
+<link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
+<script defer src="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.js" onload="window.suiconnectInit()"></script>
 ```
