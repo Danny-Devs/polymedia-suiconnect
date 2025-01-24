@@ -1,10 +1,33 @@
-import { ConnectModal, SuiClientProvider, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, WalletProvider } from "@mysten/dapp-kit";
+import { ConnectModal, SuiClientProvider, SuiClientProviderContext, useCurrentAccount, useDisconnectWallet, useSignAndExecuteTransaction, useSignPersonalMessage, useSignTransaction, WalletProvider } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
+
+export type SuiConnectConfig = {
+    rpcUrl: string;
+    autoConnect: boolean;
+};
+
+export const SuiConnect = ({ cnf }: {
+    cnf: SuiConnectConfig,
+}) => {
+    const queryClient = new QueryClient();
+    const networkConfig = {
+        NetworkNameDoesntMatter: { url: cnf.rpcUrl }
+    };
+    return (
+        <QueryClientProvider client={queryClient}>
+            <SuiClientProvider networks={networkConfig} network="NetworkNameDoesntMatter">
+                <WalletProvider autoConnect={cnf.autoConnect}>
+                    <App />
+                </WalletProvider>
+            </SuiClientProvider>
+        </QueryClientProvider>
+    );
+};
 
 type WalletChangeDetail = {
     address: string | null;
@@ -21,28 +44,8 @@ const emitWalletChangeEvent = (detail: WalletChangeDetail) => {
     window.dispatchEvent(event);
 };
 
-export const WalletConnector = () =>
-{
-    const queryClient = new QueryClient();
-
-    const networkConfig = {
-        mainnet: { url: "https://fullnode.mainnet.sui.io/" }
-    };
-
-    return (
-        <QueryClientProvider client={queryClient}>
-            <SuiClientProvider networks={networkConfig} network="mainnet">
-                <WalletProvider autoConnect={true}>
-                    <App />
-                </WalletProvider>
-            </SuiClientProvider>
-        </QueryClientProvider>
-    );
-};
-
 const App = () =>
 {
-
     const currAcct = useCurrentAccount();
 	const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
 	const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
