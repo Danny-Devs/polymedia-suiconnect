@@ -11,17 +11,17 @@ export type SuiConnectConfig = {
     autoConnect: boolean;
 };
 
-export const SuiConnect = ({ cnf }: {
-    cnf: SuiConnectConfig,
-}) => {
+export const SuiConnect = ({
+    rpcUrl, autoConnect,
+}: SuiConnectConfig) => {
     const queryClient = new QueryClient();
     const networkConfig = {
-        NetworkNameDoesntMatter: { url: cnf.rpcUrl }
+        NetworkNameDoesntMatter: { url: rpcUrl }
     };
     return (
         <QueryClientProvider client={queryClient}>
             <SuiClientProvider networks={networkConfig} network="NetworkNameDoesntMatter">
-                <WalletProvider autoConnect={cnf.autoConnect}>
+                <WalletProvider autoConnect={autoConnect}>
                     <App />
                 </WalletProvider>
             </SuiClientProvider>

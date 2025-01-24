@@ -6,7 +6,7 @@ function init(cnf: SuiConnectConfig) {
     const container = document.getElementById("suiconnect-root");
     if (container) {
         const root = createRoot(container);
-        root.render(<SuiConnect cnf={cnf} />);
+        root.render(<SuiConnect {...cnf} />);
     }
 }
 
