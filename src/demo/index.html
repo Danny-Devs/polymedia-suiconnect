@@ -4,10 +4,11 @@
     <title>SuiConnect Demo</title>
     <!-- 1. Load SuiConnect -->
     <link rel="stylesheet" href="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.css">
-    <script defer src="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.js" onload="window.suiconnectInit({
-        rpcUrl: 'https://fullnode.mainnet.sui.io',
-        autoConnect: true
-    })"></script>
+    <script defer src="https://8d48b16d.polymedia-suiconnect.pages.dev/assets/index-1.0.0.js"
+        onload="window.suiconnectInit({
+            rpcUrl: 'https://fullnode.mainnet.sui.io',
+            autoConnect: true
+        })"></script>
 </head>
 <body>
     <h2>SuiConnect Demo</h2>
@@ -58,10 +59,7 @@
 
         async function getSuiBalance() {
             try {
-                const client = new suiConnect.SuiClient({
-                    url: "https://fullnode.mainnet.sui.io"
-                });
-                const balance = await client.getBalance({
+                const balance = await suiConnect.client.getBalance({
                     owner: suiConnect.address,
                     coinType: "0x2::sui::SUI"
                 });

@@ -11,6 +11,15 @@ export type SuiConnectConfig = {
     autoConnect: boolean;
 };
 
+type WalletChangeDetail = {
+    address: string | null;
+    signPersonalMessage: unknown;
+    signAndExecuteTransaction: unknown;
+    signTransaction: unknown;
+    client: SuiClient;
+    Transaction: typeof Transaction;
+};
+
 export const SuiConnect = ({
     rpcUrl, autoConnect,
 }: SuiConnectConfig) => {
@@ -22,20 +31,11 @@ export const SuiConnect = ({
         <QueryClientProvider client={queryClient}>
             <SuiClientProvider networks={networkConfig} network="NetworkNameDoesntMatter">
                 <WalletProvider autoConnect={autoConnect}>
-                    <App />
+                    <App rpcUrl={rpcUrl} />
                 </WalletProvider>
             </SuiClientProvider>
         </QueryClientProvider>
     );
-};
-
-type WalletChangeDetail = {
-    address: string | null;
-    signPersonalMessage: unknown;
-    signAndExecuteTransaction: unknown;
-    signTransaction: unknown;
-    SuiClient: typeof SuiClient;
-    Transaction: typeof Transaction;
 };
 
 const emitWalletChangeEvent = (detail: WalletChangeDetail) => {
@@ -44,7 +44,11 @@ const emitWalletChangeEvent = (detail: WalletChangeDetail) => {
     window.dispatchEvent(event);
 };
 
-const App = () =>
+const App = ({
+    rpcUrl,
+}: {
+    rpcUrl: string,
+}) =>
 {
     const currAcct = useCurrentAccount();
 	const { mutateAsync: signPersonalMessage } = useSignPersonalMessage();
@@ -60,7 +64,7 @@ const App = () =>
             signPersonalMessage,
             signAndExecuteTransaction,
             signTransaction,
-            SuiClient,
+            client: new SuiClient({ url: rpcUrl }),
             Transaction,
         });
     }, [currAcct]);
