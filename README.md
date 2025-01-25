@@ -4,6 +4,8 @@ Add a Sui wallet connector anywhere.
 
 If you need to interact with Sui in a plain HTML/JS page and can't use libraries like `react` and `@mysten/dapp-kit`, SuiConnect has you covered.
 
+![Polymedia SuiConnect](https://suiconnect.polymedia.app/img/open-graph.webp)
+
 ## How to use
 
 1. Load SuiConnect in your `<head>`:
@@ -44,9 +46,9 @@ window.addEventListener("suiconnect-wallet-change", (event) => {
 </script>
 ```
 
-## Example
+## Demo
 
-A complete working example is in [src/demo/index.html](./src/demo/index.html).
+A working demo is available at [src/demo/index.html](./src/demo/index.html).
 
 To try it locally, run one of the following commands and visit http://localhost:3333 in your browser.
 
@@ -72,7 +74,7 @@ You can style the wallet button and its container with these CSS selectors:
 #suiconnect .btn.disconnect { /* ... */ }
 ```
 
-## Security
+## Security
 
 SuiConnect is served via immutable CloudFlare URLs. Once added to your project, the code will never change unless you choose to update it.
 
