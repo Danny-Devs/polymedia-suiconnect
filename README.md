@@ -1,8 +1,8 @@
 # SuiConnect
 
-Add a Sui wallet connector anywhere.
+Add Sui connectivity anywhere, using just plain HTML/JS.
 
-If you need to interact with Sui in a plain HTML/JS page and can't use libraries like `react` and `@mysten/dapp-kit`, SuiConnect has you covered.
+Use it if your website needs to interact with Sui wallets and RPCs, but can't use libraries like `react` and `@mysten/dapp-kit`.
 
 ![Polymedia SuiConnect](https://suiconnect.polymedia.app/img/open-graph.webp)
 
