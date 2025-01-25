@@ -53,13 +53,13 @@ A working demo is available at [src/demo/index.html](./src/demo/index.html).
 To try it locally, run one of the following commands and visit http://localhost:3333 in your browser.
 
 Using Node:
-```
+```shell
 cd src/demo/
 npx http-server -p 3333
 ```
 
 Using Python:
-```
+```shell
 cd src/demo/
 python3 -m http.server 3333
 ```
@@ -88,7 +88,7 @@ Notes:
 - Exposes `SuiClient` instance instead of class.
 
 Installation:
-```
+```html
 <link rel="stylesheet" href="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.css">
 <script defer src="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.js"
     onload="window.suiconnectInit({
