@@ -1,77 +1,100 @@
 // NFT creation state
 let imageBase64 = null;
 
-// File handling functions
-function initNFTHandlers() {
-  const uploadZone = document.getElementById('uploadZone');
-  const fileInput = document.getElementById('fileInput');
-  const imagePreview = document.getElementById('imagePreview');
-  const imageControls = document.querySelector('.image-controls');
+// Initialize NFT page
+export function initNFTPage() {
+  setupDropZone();
+  setupPropertyHandlers();
+}
 
-  if (!uploadZone) return;
+// File handling
+function setupDropZone() {
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
 
   // Drag and drop handlers
-  uploadZone.addEventListener('dragover', e => {
+  dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
-    uploadZone.classList.add('dragover');
+    dropZone.classList.add('drag-over');
   });
 
-  uploadZone.addEventListener('dragleave', e => {
-    e.preventDefault();
-    uploadZone.classList.remove('dragover');
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
   });
 
-  uploadZone.addEventListener('drop', e => {
+  dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    uploadZone.classList.remove('dragover');
+    dropZone.classList.remove('drag-over');
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      handleFile(file);
-    }
+    if (file) handleFile(file);
   });
 
-  fileInput.addEventListener('change', e => {
+  // Click to upload
+  dropZone.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    if (file) {
-      handleFile(file);
-    }
+    if (file) handleFile(file);
   });
 }
 
 function handleFile(file) {
-  const imagePreview = document.getElementById('imagePreview');
-  const uploadZone = document.getElementById('uploadZone');
-  const imageControls = document.querySelector('.image-controls');
+  if (!file.type.startsWith('image/')) {
+    alert('Please upload an image file');
+    return;
+  }
 
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = (e) => {
     imageBase64 = e.target.result;
-    imagePreview.src = imageBase64;
-    imagePreview.style.display = 'block';
-    uploadZone.classList.add('has-image');
-    imageControls.style.display = 'flex';
+    updatePreview();
   };
   reader.readAsDataURL(file);
 }
 
-function removeImage() {
-  const imagePreview = document.getElementById('imagePreview');
-  const uploadZone = document.getElementById('uploadZone');
-  const imageControls = document.querySelector('.image-controls');
-  const fileInput = document.getElementById('fileInput');
+function updatePreview() {
+  const preview = document.getElementById('imagePreview');
+  const controls = document.getElementById('imageControls');
 
-  imageBase64 = null;
-  imagePreview.src = '';
-  imagePreview.style.display = 'none';
-  uploadZone.classList.remove('has-image');
-  imageControls.style.display = 'none';
-  fileInput.value = '';
+  if (imageBase64) {
+    preview.innerHTML = `<img src="${imageBase64}" alt="NFT Preview">`;
+    controls.classList.remove('hidden');
+  } else {
+    preview.innerHTML = '';
+    controls.classList.add('hidden');
+  }
 }
 
-async function createNFT(event) {
+export function removeImage() {
+  imageBase64 = null;
+  updatePreview();
+  document.getElementById('fileInput').value = '';
+}
+
+// Property handling
+function setupPropertyHandlers() {
+  document.getElementById('addProperty').addEventListener('click', addPropertyRow);
+}
+
+function addPropertyRow() {
+  const container = document.getElementById('properties');
+  const row = document.createElement('div');
+  row.className = 'property-row';
+  row.innerHTML = `
+    <input type="text" placeholder="Property name" class="property-key">
+    <input type="text" placeholder="Property value" class="property-value">
+    <button type="button" class="remove-property" onclick="this.parentElement.remove()">Remove</button>
+  `;
+  container.appendChild(row);
+}
+
+// NFT Creation
+export async function createNFT(event) {
   event.preventDefault();
 
-  if (!suiconnect?.address) {
+  if (!window.suiconnect?.address) {
     alert('Please connect your wallet first');
     return;
   }
@@ -80,7 +103,7 @@ async function createNFT(event) {
   const description = document.getElementById('nftForm').nftDescription.value;
 
   try {
-    const { Transaction, signAndExecuteTransaction } = suiconnect;
+    const { Transaction, signAndExecuteTransaction } = window.suiconnect;
     const tx = new Transaction();
 
     // Prepare NFT fields
@@ -93,6 +116,17 @@ async function createNFT(event) {
     if (imageBase64) {
       fields.push({ key: 'image_url', value: imageBase64 });
     }
+
+    // Add custom properties
+    document.querySelectorAll('.property-row').forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value && inputs[1].value) {
+        fields.push({
+          key: inputs[0].value,
+          value: inputs[1].value
+        });
+      }
+    });
 
     // Move call to create an NFT
     tx.moveCall({
@@ -116,13 +150,8 @@ async function createNFT(event) {
     // Reset form
     document.getElementById('nftForm').reset();
     removeImage();
-
-    // Refresh wallet contents
-    await loadWalletContents();
+    document.getElementById('properties').innerHTML = '';
   } catch (error) {
     alert(`Error creating NFT: ${error.message}`);
   }
-}
-
-// Initialize NFT handlers when the page loads
-document.addEventListener('DOMContentLoaded', initNFTHandlers); 
+} 

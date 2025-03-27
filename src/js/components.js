@@ -1,18 +1,20 @@
 // Header component management
-const loadHeader = async () => {
+export const loadHeader = async () => {
   const headerHTML = `
     <header>
       <a href="/" class="logo">Sui Universe</a>
       <nav>
-        <a href="/pages/assets.html" class="nav-link">Assets</a>
-        <a href="/pages/create.html" class="nav-link">Create</a>
-        <a href="/pages/kiosk.html" class="nav-link">Marketplace</a>
+        <a href="/assets.html" class="nav-link">Assets</a>
+        <a href="/create.html" class="nav-link">Create</a>
+        <a href="/kiosk.html" class="nav-link">Marketplace</a>
       </nav>
       <div class="header-actions">
-        <button id="connect-wallet" class="button gradient-button">Connect Wallet</button>
-        <div id="wallet-info" class="hidden">
-          <span id="wallet-address"></span>
-          <button id="disconnect-wallet" class="button">Disconnect</button>
+        <div id="wallet-section">
+          <button id="connect-wallet" class="button gradient-button">Connect Wallet</button>
+          <div id="wallet-info" class="hidden">
+            <span id="wallet-address"></span>
+            <button id="disconnect-wallet" class="button">Disconnect</button>
+          </div>
         </div>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
           <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -58,7 +60,60 @@ const loadHeader = async () => {
     const isDark = document.documentElement.classList.contains('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
+
+  // Setup wallet connection
+  setupWalletConnection();
 };
 
-// Export the function
+// Handle wallet connection
+const setupWalletConnection = () => {
+  const connectButton = document.getElementById('connect-wallet');
+  const walletInfo = document.getElementById('wallet-info');
+  const walletAddress = document.getElementById('wallet-address');
+  const disconnectButton = document.getElementById('disconnect-wallet');
+
+  // Update UI based on connection status
+  const updateWalletUI = (address) => {
+    if (address) {
+      connectButton.classList.add('hidden');
+      walletInfo.classList.remove('hidden');
+      walletAddress.textContent = `${address.slice(0, 6)}...${address.slice(-4)}`;
+    } else {
+      connectButton.classList.remove('hidden');
+      walletInfo.classList.add('hidden');
+      walletAddress.textContent = '';
+    }
+  };
+
+  // Handle wallet changes
+  window.addEventListener('suiconnect-wallet-change', (event) => {
+    const { address } = event.detail;
+    updateWalletUI(address);
+  });
+
+  // Connect wallet button click
+  connectButton.addEventListener('click', async () => {
+    try {
+      await window.suiconnect.connect();
+    } catch (error) {
+      console.error('Failed to connect wallet:', error);
+    }
+  });
+
+  // Disconnect wallet button click
+  disconnectButton.addEventListener('click', async () => {
+    try {
+      await window.suiconnect.disconnect();
+    } catch (error) {
+      console.error('Failed to disconnect wallet:', error);
+    }
+  });
+
+  // Check initial connection status
+  if (window.suiconnect?.address) {
+    updateWalletUI(window.suiconnect.address);
+  }
+};
+
+// Make loadHeader available globally
 window.loadHeader = loadHeader; 
