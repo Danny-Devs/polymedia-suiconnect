@@ -1,0 +1,470 @@
+<div class="kiosk-container">
+  <div class="page-header">
+    <h1>NFT Marketplace</h1>
+    <p>Buy and sell NFTs using Sui Kiosk</p>
+  </div>
+
+  <div class="kiosk-grid">
+    <div class="marketplace-section">
+      <div class="section-header">
+        <h3>Listed NFTs</h3>
+        <button class="btn btn-secondary" onclick="createKiosk()">
+          Create Kiosk
+        </button>
+      </div>
+      <div id="listedNFTs" class="grid">
+        <div class="loading">Loading marketplace...</div>
+      </div>
+    </div>
+
+    <div class="my-listings-section">
+      <div class="section-header">
+        <h3>My Listings</h3>
+      </div>
+      <div id="myListings" class="grid">
+        <div class="loading">Loading your listings...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .kiosk-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .kiosk-grid {
+    display: grid;
+    gap: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .section-header h3 {
+    margin: 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .nft-card {
+    background: var(--bg);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+
+  .nft-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .nft-image {
+    width: 100%;
+    height: 200px;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nft-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .nft-details {
+    padding: 15px;
+  }
+
+  .nft-details h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+  }
+
+  .nft-details p {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .price-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .price-tag .sui-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    grid-column: 1 / -1;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    grid-column: 1 / -1;
+  }
+
+  .error {
+    text-align: center;
+    padding: 20px;
+    color: var(--error);
+    background: var(--error-bg);
+    border-radius: 8px;
+    grid-column: 1 / -1;
+  }
+
+  /* List NFT Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background: var(--bg);
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+  }
+
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .form-input:focus {
+    border-color: var(--primary);
+    outline: none;
+  }
+
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+</style>
+
+<script>
+  let kioskId = null;
+
+  async function initKioskPage() {
+    if (!window.suiconnect?.address) {
+      document.querySelector('.kiosk-container').innerHTML = `
+            <div class="page-header">
+                <h1>Connect Wallet</h1>
+                <p>Please connect your wallet to access the marketplace</p>
+            </div>
+        `;
+      return;
+    }
+
+    await Promise.all([loadListedNFTs(), loadMyListings()]);
+  }
+
+  async function createKiosk() {
+    if (!window.suiconnect?.address) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    try {
+      const { Transaction, signAndExecuteTransaction } = window.suiconnect;
+      const tx = new Transaction();
+
+      tx.moveCall({
+        target: '0x2::kiosk::create',
+        arguments: []
+      });
+
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+        options: { showEffects: true }
+      });
+
+      kioskId = result.effects.created[0].reference.objectId;
+      alert(`Kiosk created successfully!\nKiosk ID: ${kioskId}`);
+
+      // Reload listings
+      await Promise.all([loadListedNFTs(), loadMyListings()]);
+    } catch (error) {
+      alert(`Error creating kiosk: ${error.message}`);
+    }
+  }
+
+  async function loadListedNFTs() {
+    const listedNFTs = document.getElementById('listedNFTs');
+
+    try {
+      const { getKioskListings } = window.suiconnect;
+      const listings = await getKioskListings();
+
+      if (!listings.length) {
+        listedNFTs.innerHTML = `
+                <div class="empty-state">
+                    <p>No NFTs listed in the marketplace</p>
+                </div>
+            `;
+        return;
+      }
+
+      listedNFTs.innerHTML = listings
+        .map(
+          nft => `
+            <div class="nft-card card">
+                <div class="nft-image">
+                    ${
+                      nft.image_url
+                        ? `<img src="${nft.image_url}" alt="${nft.name}">`
+                        : `<span class="placeholder">No Image</span>`
+                    }
+                </div>
+                <div class="nft-details">
+                    <h4>${nft.name || 'Untitled NFT'}</h4>
+                    <p>${nft.description || 'No description'}</p>
+                    <div class="price-tag">
+                        <svg class="sui-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8L19.2 8 12 11.2 4.8 8 12 4.8zM4 9.5l7 3.5v7L4 16.5v-7zm9 10.5v-7l7-3.5v7l-7 3.5z"/>
+                        </svg>
+                        ${(nft.price / 1e9).toFixed(4)} SUI
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="buyNFT('${
+                          nft.id
+                        }', ${nft.price})">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `
+        )
+        .join('');
+    } catch (error) {
+      listedNFTs.innerHTML = `
+            <div class="error">
+                Error loading marketplace: ${error.message}
+            </div>
+        `;
+    }
+  }
+
+  async function loadMyListings() {
+    const myListings = document.getElementById('myListings');
+
+    try {
+      const { getMyKioskListings } = window.suiconnect;
+      const listings = await getMyKioskListings();
+
+      if (!listings.length) {
+        myListings.innerHTML = `
+                <div class="empty-state">
+                    <p>You haven't listed any NFTs yet</p>
+                </div>
+            `;
+        return;
+      }
+
+      myListings.innerHTML = listings
+        .map(
+          nft => `
+            <div class="nft-card card">
+                <div class="nft-image">
+                    ${
+                      nft.image_url
+                        ? `<img src="${nft.image_url}" alt="${nft.name}">`
+                        : `<span class="placeholder">No Image</span>`
+                    }
+                </div>
+                <div class="nft-details">
+                    <h4>${nft.name || 'Untitled NFT'}</h4>
+                    <p>${nft.description || 'No description'}</p>
+                    <div class="price-tag">
+                        <svg class="sui-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8L19.2 8 12 11.2 4.8 8 12 4.8zM4 9.5l7 3.5v7L4 16.5v-7zm9 10.5v-7l7-3.5v7l-7 3.5z"/>
+                        </svg>
+                        ${(nft.price / 1e9).toFixed(4)} SUI
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="delistNFT('${
+                          nft.id
+                        }')">
+                            Delist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `
+        )
+        .join('');
+    } catch (error) {
+      myListings.innerHTML = `
+            <div class="error">
+                Error loading your listings: ${error.message}
+            </div>
+        `;
+    }
+  }
+
+  async function listNFT(nftId, price) {
+    if (!kioskId) {
+      alert('Please create a kiosk first');
+      return;
+    }
+
+    try {
+      const { Transaction, signAndExecuteTransaction } = window.suiconnect;
+      const tx = new Transaction();
+
+      tx.moveCall({
+        target: '0x2::kiosk::list',
+        arguments: [tx.pure(kioskId), tx.pure(nftId), tx.pure(price)]
+      });
+
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+        options: { showEffects: true }
+      });
+
+      alert(`NFT listed successfully!\nTransaction digest: ${result.digest}`);
+
+      // Reload listings
+      await Promise.all([loadListedNFTs(), loadMyListings()]);
+    } catch (error) {
+      alert(`Error listing NFT: ${error.message}`);
+    }
+  }
+
+  async function delistNFT(nftId) {
+    if (!kioskId) {
+      alert('No kiosk found');
+      return;
+    }
+
+    try {
+      const { Transaction, signAndExecuteTransaction } = window.suiconnect;
+      const tx = new Transaction();
+
+      tx.moveCall({
+        target: '0x2::kiosk::delist',
+        arguments: [tx.pure(kioskId), tx.pure(nftId)]
+      });
+
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+        options: { showEffects: true }
+      });
+
+      alert(`NFT delisted successfully!\nTransaction digest: ${result.digest}`);
+
+      // Reload listings
+      await Promise.all([loadListedNFTs(), loadMyListings()]);
+    } catch (error) {
+      alert(`Error delisting NFT: ${error.message}`);
+    }
+  }
+
+  async function buyNFT(nftId, price) {
+    try {
+      const { Transaction, signAndExecuteTransaction } = window.suiconnect;
+      const tx = new Transaction();
+
+      tx.moveCall({
+        target: '0x2::kiosk::purchase',
+        arguments: [tx.pure(kioskId), tx.pure(nftId), tx.pure(price)]
+      });
+
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+        options: { showEffects: true }
+      });
+
+      alert(
+        `NFT purchased successfully!\nTransaction digest: ${result.digest}`
+      );
+
+      // Reload listings
+      await Promise.all([loadListedNFTs(), loadMyListings()]);
+    } catch (error) {
+      alert(`Error purchasing NFT: ${error.message}`);
+    }
+  }
+</script>

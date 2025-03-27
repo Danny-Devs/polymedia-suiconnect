@@ -1,102 +1,695 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>SuiConnect Demo</title>
-    <!-- 1. Load SuiConnect -->
-    <link rel="stylesheet" href="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.css">
-    <script defer src="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.js"
-        onload="window.suiconnectInit({
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sui Universe</title>
+    <!-- Initialize SuiConnect -->
+    <link
+      rel="stylesheet"
+      href="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.css"
+    />
+    <script
+      defer
+      src="https://c9bb31a4.polymedia-suiconnect.pages.dev/assets/index-1.1.0.js"
+      onload="window.suiconnectInit({
             rpcUrl: 'https://fullnode.mainnet.sui.io',
-            autoConnect: true,
-        })">
-    </script>
-</head>
-<body>
-    <h2>SuiConnect Demo</h2>
-
-    <!-- 2. Add the wallet button container -->
-    <div id="suiconnect-root">
-        <!-- Contents will be replaced by SuiConnect - but this prevents layout shift -->
-        <div id="suiconnect">
+            autoConnect: false
+        })"
+    ></script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="header-content">
+        <a href="#/" class="logo">
+          <svg class="logo-icon" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8L19.2 8 12 11.2 4.8 8 12 4.8zM4 9.5l7 3.5v7L4 16.5v-7zm9 10.5v-7l7-3.5v7l-7 3.5z"
+            />
+          </svg>
+          Sui Universe
+        </a>
+        <nav class="main-nav">
+          <a href="pages/assets.html" class="nav-link">My Assets</a>
+          <a href="pages/create.html" class="nav-link">Create NFT</a>
+          <a href="pages/kiosk.html" class="nav-link">Marketplace</a>
+        </nav>
+        <div id="suiconnect-root">
+          <div id="suiconnect">
             <button disabled class="btn connect">CONNECT WALLET</button>
+          </div>
         </div>
+      </div>
+    </header>
+
+    <main id="app" class="main-content">
+      <div id="page-content"></div>
+    </main>
+
+    <!-- Settings Menu -->
+    <div class="settings-menu" id="settingsMenu">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button class="settings-close" onclick="toggleSettings()">×</button>
+      </div>
+
+      <div class="settings-section">
+        <h3>Wallet Details</h3>
+        <div id="fullAddress" class="wallet-address"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Display Preferences</h3>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            id="showFullAddress"
+            onchange="toggleAddressDisplay()"
+          />
+          Show full address in header
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <h3>About Web3</h3>
+        <p class="about-text">
+          Web3 represents a decentralized internet where you have full control
+          over your digital assets. Your wallet is your sovereign identity - no
+          central authority can control or restrict your actions.
+        </p>
+      </div>
     </div>
 
-    <!-- Example UI -->
-    <div style="margin: 10px 0;">
-        Status: <span id="status">Disconnected</span>
+    <!-- STEP 2: Mount Point for Wallet UI
+         - The suiconnect-root div is where the wallet UI will be mounted
+         - Initial button prevents layout shift during loading
+         - SuiConnect will replace this content with its own UI
+    -->
+    <div id="suiconnect-root">
+      <div id="suiconnect">
+        <button disabled class="btn connect">CONNECT WALLET</button>
+      </div>
     </div>
 
-    <div id="actions" style="display: none; margin-top: 20px;">
-        <h3>Actions:</h3>
-        <button onclick="getSuiBalance()">Get Balance</button>
-        <button onclick="signMessage()">Sign Message</button>
-        <button onclick="signAndExecuteTx()">Execute Transaction</button>
+    <!-- Status Display
+         Shows the current wallet connection state
+         Updates automatically when wallet connects/disconnects
+    -->
+    <div id="balance" class="balance-display hidden">
+      Total Balance: <span class="balance-sui">0 SUI</span>
+      <div class="info-tooltip">
+        <div class="tooltip-content">
+          SUI is the native token of the Sui blockchain. 1 SUI = 1,000,000,000
+          MIST (the smallest unit).
+        </div>
+      </div>
     </div>
 
-    <!-- 3. Handle wallet connect/disconnect -->
+    <div class="section-header">
+      <h2 class="section-title">Create Your NFT</h2>
+      <div class="info-tooltip">
+        <div class="tooltip-content">
+          NFTs (Non-Fungible Tokens) are unique digital assets on the
+          blockchain. Each NFT has its own identity and can represent anything
+          from art to collectibles.
+        </div>
+      </div>
+    </div>
+
+    <div class="create-nft">
+      <h2>Create NFT</h2>
+      <form id="nftForm" onsubmit="createNFT(event)">
+        <input type="text" id="nftName" placeholder="NFT Name" required />
+        <textarea
+          id="nftDescription"
+          placeholder="NFT Description"
+          required
+        ></textarea>
+
+        <div id="uploadZone" class="upload-zone">
+          <input type="file" id="fileInput" accept="image/*" />
+          <p>Drag & drop an image here or click to upload (optional)</p>
+          <img id="imagePreview" class="file-preview" style="display: none" />
+          <div class="image-controls" style="display: none">
+            <button type="button" class="remove-image" onclick="removeImage()">
+              Remove Image
+            </button>
+          </div>
+        </div>
+
+        <button type="submit">Create NFT</button>
+      </form>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title">Your Digital Assets</h2>
+      <div class="info-tooltip">
+        <div class="tooltip-content">
+          These are all the digital assets in your wallet. Each object has a
+          unique ID and type on the Sui blockchain.
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="search" placeholder="Search by ID or type..." />
+      <select id="type-filter">
+        <option value="all">All Objects</option>
+        <option value="coin">Coins</option>
+        <option value="nft">NFTs</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      Loading your wallet contents...
+    </div>
+    <div id="wallet-grid" class="wallet-grid"></div>
+
+    <!-- Transfer Modal -->
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal" id="transferModal">
+      <h3>Transfer Asset</h3>
+      <div id="transferDetails"></div>
+      <input
+        type="text"
+        id="recipientAddress"
+        placeholder="Enter recipient's Sui address"
+      />
+      <div class="modal-buttons">
+        <button class="btn cancel" onclick="closeTransferModal()">
+          Cancel
+        </button>
+        <button class="btn confirm" onclick="confirmTransfer()">
+          Confirm Transfer
+        </button>
+      </div>
+    </div>
+
+    <!-- Kiosk Section -->
+    <!-- <div class="section-header">
+      <h2 class="section-title">Your Kiosk</h2>
+      <div class="info-tooltip">
+        <div class="tooltip-content">
+          A kiosk is your personal marketplace where you can list NFTs for sale
+          and manage auctions.
+        </div>
+      </div>
+    </div> -->
+
+    <div class="kiosk-section">
+      <div class="kiosk-empty">
+        <p>You don't have any items listed in your kiosk yet.</p>
+        <button onclick="createKiosk()">Create Kiosk</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Wallet Integration Code
+         Demonstrates how to:
+         1. Listen for wallet connection events
+         2. Access wallet functions (signing, transactions)
+         3. Interact with the Sui blockchain
+    -->
     <script>
-        window.addEventListener("suiconnect-wallet-change", yourHandler);
+      let suiconnect = null;
+      let allObjects = [];
 
-        // === Example handler and Sui wallet / RPC actions ===
-
-        let suiconnect = null;
-
-        function yourHandler(event) {
-            suiconnect = event.detail;
-            updateUI();
+      window.addEventListener('suiconnect-wallet-change', async event => {
+        suiconnect = event.detail;
+        updateUI();
+        if (suiconnect?.address) {
+          await loadWalletContents();
+        } else {
+          document.getElementById('balance').classList.add('hidden');
+          document.getElementById('wallet-grid').innerHTML = '';
         }
+      });
 
-        function updateUI() {
-            const status = document.getElementById('status');
-            const actions = document.getElementById("actions");
-
-            const address = suiconnect.address;
-            status.textContent = address
-                ? `Connected as ${address.slice(0,6)}...${address.slice(-4)}`
-                : 'Disconnected';
-            actions.style.display = address ? "block" : "none";
+      function updateUI() {
+        const address = suiconnect?.address;
+        if (address) {
+          document.getElementById('fullAddress').textContent = address;
+        } else {
+          document.getElementById('fullAddress').textContent = '';
         }
+      }
 
-        async function getSuiBalance() {
-            const { client } = suiconnect;
-            try {
-                const balance = await client.getBalance({
-                    owner: suiconnect.address,
-                    coinType: "0x2::sui::SUI"
-                });
-                const totalBalance = Number(balance.totalBalance) / 1_000_000_000;
-                alert(`Wallet balance: ${totalBalance.toFixed(2)} SUI`);
-            } catch (error) {
-                alert(error);
+      function formatAddress(address) {
+        if (!address) return '';
+        const showFull = document.getElementById('showFullAddress')?.checked;
+        return showFull
+          ? address
+          : `${address.slice(0, 6)}...${address.slice(-4)}`;
+      }
+
+      function toggleSettings() {
+        document.getElementById('settingsMenu').classList.toggle('active');
+      }
+
+      function toggleAddressDisplay() {
+        updateUI();
+      }
+
+      // Filter objects based on search and type
+      document
+        .getElementById('search')
+        .addEventListener('input', filterObjects);
+      document
+        .getElementById('type-filter')
+        .addEventListener('change', filterObjects);
+
+      function filterObjects() {
+        const searchTerm = document
+          .getElementById('search')
+          .value.toLowerCase();
+        const typeFilter = document.getElementById('type-filter').value;
+
+        const filtered = allObjects.filter(obj => {
+          // Check if obj and obj.data exist
+          if (!obj?.data?.objectId || !obj?.data?.type) return false;
+
+          const matchesSearch =
+            obj.data.objectId.toLowerCase().includes(searchTerm) ||
+            obj.data.type.toLowerCase().includes(searchTerm);
+
+          if (typeFilter === 'all') return matchesSearch;
+          if (typeFilter === 'coin')
+            return matchesSearch && obj.data.type.includes('::sui::SUI');
+          if (typeFilter === 'nft')
+            return (
+              matchesSearch &&
+              (obj.data?.display?.data?.image_url ||
+                obj.data?.content?.fields?.url ||
+                obj.data?.content?.fields?.name)
+            );
+          if (typeFilter === 'other')
+            return (
+              matchesSearch &&
+              !obj.data.type.includes('::sui::SUI') &&
+              !(
+                obj.data?.display?.data?.image_url ||
+                obj.data?.content?.fields?.url ||
+                obj.data?.content?.fields?.name
+              )
+            );
+
+          return matchesSearch;
+        });
+
+        displayObjects(filtered);
+      }
+
+      async function loadWalletContents() {
+        const loading = document.getElementById('loading');
+        const grid = document.getElementById('wallet-grid');
+        loading.classList.remove('hidden');
+        grid.innerHTML = '';
+
+        try {
+          const { client } = suiconnect;
+
+          // Get SUI balance
+          const balance = await client.getBalance({
+            owner: suiconnect.address,
+            coinType: '0x2::sui::SUI'
+          });
+          const totalBalance = Number(balance.totalBalance) / 1_000_000_000;
+
+          document.getElementById('balance').classList.remove('hidden');
+          document.querySelector(
+            '.balance-sui'
+          ).textContent = `${totalBalance.toFixed(4)} SUI`;
+
+          // Get all objects with pagination
+          let cursor = null;
+          allObjects = [];
+
+          do {
+            const response = await client.getOwnedObjects({
+              owner: suiconnect.address,
+              options: {
+                showContent: true,
+                showDisplay: true
+              },
+              cursor: cursor,
+              limit: 50 // Fetch in smaller batches
+            });
+
+            if (response?.data) {
+              allObjects = [...allObjects, ...response.data];
+              cursor = response.hasNextPage ? response.nextCursor : null;
+            } else {
+              console.error('Invalid response format:', response);
+              break;
             }
+          } while (cursor);
+
+          displayObjects(allObjects);
+        } catch (error) {
+          console.error('Error loading wallet contents:', error);
+          grid.innerHTML = `<p class="error">Error loading wallet contents: ${error.message}</p>`;
+        } finally {
+          loading.classList.add('hidden');
+        }
+      }
+
+      function displayObjects(objects) {
+        const grid = document.getElementById('wallet-grid');
+        grid.innerHTML = '';
+
+        if (!Array.isArray(objects) || objects.length === 0) {
+          grid.innerHTML =
+            '<p class="empty-state">No objects found in your wallet.</p>';
+          return;
         }
 
-        async function signMessage() {
-            const { signPersonalMessage } = suiconnect;
-            try {
-                const resp = await signPersonalMessage({
-                    message: new TextEncoder().encode("Hey hey hey SuiConnect!"),
-                });
-                alert(`Message signed successfully:\n\n${JSON.stringify(resp, null, 2)}`);
-            } catch (error) {
-                alert(error);
-            }
+        objects.forEach(obj => {
+          if (!obj?.data) return;
+
+          const display = obj.data.display?.data || {};
+          const content = obj.data.content?.fields || {};
+          const isCoin = obj.data.type?.includes('::sui::SUI');
+          const type = obj.data.type?.split('::').pop() || 'Unknown Type';
+
+          const card = document.createElement('div');
+          card.className = 'object-card card';
+
+          // For coins, show balance
+          if (isCoin && content?.balance) {
+            const balance = Number(content.balance) / 1_000_000_000;
+            const mist = Number(content.balance);
+            card.innerHTML = `
+              <button class="copy-button" onclick="copyToClipboard('${
+                obj.data.objectId
+              }')">Copy ID</button>
+              <div class="object-type">
+                ${type}
+                <div class="info-tooltip">
+                  <div class="tooltip-content">
+                    This is a SUI coin object. The balance is shown in both SUI and MIST units.
+                  </div>
+                </div>
+              </div>
+              <div class="object-id">${obj.data.objectId || 'Unknown ID'}</div>
+              <div class="object-details">
+                <div>Balance: <span class="object-value">${balance.toFixed(
+                  4
+                )} SUI</span></div>
+                <div class="object-explainer">(${mist.toLocaleString()} MIST)</div>
+              </div>
+              <button class="btn transfer-btn" onclick="showTransferModal('${
+                obj.data.objectId
+              }', 'SUI', ${balance})">Transfer</button>
+            `;
+          }
+          // For NFTs, show image and metadata
+          else if (display.image_url || content.url) {
+            card.innerHTML = `
+              <button class="copy-button" onclick="copyToClipboard('${
+                obj.data.objectId
+              }')">Copy ID</button>
+              <div class="object-type">
+                ${type}
+                <div class="info-tooltip">
+                  <div class="tooltip-content">
+                    This is an NFT with unique properties and metadata stored on the Sui blockchain.
+                  </div>
+                </div>
+              </div>
+              ${
+                display.image_url || content.url
+                  ? `<img class="nft-image" src="${
+                      display.image_url || content.url
+                    }" alt="NFT" onerror="this.src='https://via.placeholder.com/200'">`
+                  : ''
+              }
+              <div class="object-id">${obj.data.objectId || 'Unknown ID'}</div>
+              <div class="object-details">
+                <div class="nft-name">${
+                  display.name || content.name || 'Unnamed NFT'
+                }</div>
+                <div class="nft-description">${
+                  display.description || content.description || 'No description'
+                }</div>
+              </div>
+              <button class="btn transfer-btn" onclick="showTransferModal('${
+                obj.data.objectId
+              }', 'NFT')">Transfer</button>
+            `;
+          }
+          // For other objects, show type and fields
+          else {
+            card.innerHTML = `
+              <button class="copy-button" onclick="copyToClipboard('${
+                obj.data.objectId
+              }')">Copy ID</button>
+              <div class="object-type">
+                ${type}
+                <div class="info-tooltip">
+                  <div class="tooltip-content">
+                    This is a custom object on the Sui blockchain with its own unique properties.
+                  </div>
+                </div>
+              </div>
+              <div class="object-id">${obj.data.objectId || 'Unknown ID'}</div>
+              <div class="object-details">
+                <pre class="object-content">${JSON.stringify(
+                  content,
+                  null,
+                  2
+                )}</pre>
+              </div>
+              <button class="btn transfer-btn" onclick="showTransferModal('${
+                obj.data.objectId
+              }', 'Object')">Transfer</button>
+            `;
+          }
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Helper function to copy text to clipboard
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('ID copied to clipboard!');
+        });
+      }
+
+      // Transfer modal functions
+      let currentTransferObject = null;
+
+      function showTransferModal(objectId, type, balance = null) {
+        currentTransferObject = objectId;
+        const modal = document.getElementById('transferModal');
+        const backdrop = document.getElementById('modalBackdrop');
+        const details = document.getElementById('transferDetails');
+
+        details.innerHTML = `
+          <p>Transferring: ${type}${balance ? ` (${balance} SUI)` : ''}</p>
+          <div class="object-explainer">Object ID: ${objectId}</div>
+        `;
+
+        modal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+        document.getElementById('recipientAddress').value = '';
+      }
+
+      function closeTransferModal() {
+        document.getElementById('transferModal').classList.add('hidden');
+        document.getElementById('modalBackdrop').classList.add('hidden');
+        currentTransferObject = null;
+      }
+
+      async function confirmTransfer() {
+        const recipientAddress =
+          document.getElementById('recipientAddress').value;
+        if (!recipientAddress) {
+          alert('Please enter a recipient address');
+          return;
         }
 
-        async function signAndExecuteTx() {
-            const { Transaction, signAndExecuteTransaction } = suiconnect;
-            try {
-                const tx = new Transaction();
-                const resp = await signAndExecuteTransaction({
-                    transaction: tx,
-                    options: { showEffects: true, showObjectChanges: true },
-                });
-                alert(`Transaction executed successfully. Digest: ${resp.digest}`);
-            } catch (error) {
-                alert(error);
-            }
+        try {
+          await transferObject(currentTransferObject, recipientAddress);
+          closeTransferModal();
+        } catch (error) {
+          alert(`Error: ${error.message}`);
         }
+      }
+
+      async function transferObject(objectId) {
+        const recipientAddress =
+          document.getElementById('recipientAddress').value;
+        if (!recipientAddress) return;
+
+        try {
+          const { Transaction, signAndExecuteTransaction } = suiconnect;
+          const tx = new Transaction();
+          tx.transferObjects([objectId], recipientAddress);
+
+          const result = await signAndExecuteTransaction({
+            transaction: tx,
+            options: { showEffects: true }
+          });
+
+          alert(`Transfer successful!\nTransaction digest: ${result.digest}`);
+          await loadWalletContents();
+        } catch (error) {
+          alert(`Error transferring object: ${error.message}`);
+        }
+      }
+
+      // File handling functions
+      let imageBase64 = null;
+      const uploadZone = document.getElementById('uploadZone');
+      const fileInput = document.getElementById('fileInput');
+      const imagePreview = document.getElementById('imagePreview');
+      const imageControls = document.querySelector('.image-controls');
+
+      // Drag and drop handlers
+      uploadZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+      });
+
+      uploadZone.addEventListener('dragleave', e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+      });
+
+      uploadZone.addEventListener('drop', e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          handleFile(file);
+        }
+      });
+
+      fileInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+          handleFile(file);
+        }
+      });
+
+      function handleFile(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          imageBase64 = e.target.result;
+          imagePreview.src = imageBase64;
+          imagePreview.style.display = 'block';
+          uploadZone.classList.add('has-image');
+          imageControls.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removeImage() {
+        imageBase64 = null;
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        uploadZone.classList.remove('has-image');
+        imageControls.style.display = 'none';
+        fileInput.value = '';
+      }
+
+      async function createNFT(event) {
+        event.preventDefault();
+
+        if (!suiconnect?.address) {
+          alert('Please connect your wallet first');
+          return;
+        }
+
+        const name = document.getElementById('nftForm').nftName.value;
+        const description =
+          document.getElementById('nftForm').nftDescription.value;
+
+        try {
+          const { Transaction, signAndExecuteTransaction } = suiconnect;
+          const tx = new Transaction();
+
+          // Prepare NFT fields
+          const fields = [
+            { key: 'name', value: name },
+            { key: 'description', value: description }
+          ];
+
+          // Add image if one was uploaded
+          if (imageBase64) {
+            fields.push({ key: 'image_url', value: imageBase64 });
+          }
+
+          // Move call to create an NFT
+          tx.moveCall({
+            target: '0x2::display::create_with_fields',
+            arguments: [
+              tx.pure(name),
+              tx.pure(description),
+              tx.pure(imageBase64 || ''), // Empty string if no image
+              tx.pure(fields)
+            ]
+          });
+
+          // Execute the transaction
+          const result = await signAndExecuteTransaction({
+            transaction: tx,
+            options: { showEffects: true }
+          });
+
+          alert(
+            `NFT created successfully!\nTransaction digest: ${result.digest}`
+          );
+
+          // Reset form
+          document.getElementById('nftForm').reset();
+          removeImage();
+
+          // Refresh wallet contents
+          await loadWalletContents();
+        } catch (error) {
+          alert(`Error creating NFT: ${error.message}`);
+        }
+      }
+
+      async function createKiosk() {
+        if (!suiconnect?.address) {
+          alert('Please connect your wallet first');
+          return;
+        }
+
+        try {
+          const { Transaction, signAndExecuteTransaction } = suiconnect;
+          const tx = new Transaction();
+
+          // Create kiosk transaction
+          tx.moveCall({
+            target: '0x2::kiosk::new',
+            arguments: []
+          });
+
+          const result = await signAndExecuteTransaction({
+            transaction: tx,
+            options: { showEffects: true }
+          });
+
+          alert(
+            `Kiosk created successfully!\nTransaction digest: ${result.digest}`
+          );
+          // TODO: Refresh kiosk contents
+        } catch (error) {
+          alert(`Error creating kiosk: ${error.message}`);
+        }
+      }
     </script>
-</body>
+
+    <!-- Load JavaScript files -->
+    <script src="js/app.js"></script>
+    <script src="js/transfers.js"></script>
+    <script src="js/nft.js"></script>
+    <script src="js/kiosk.js"></script>
+  </body>
 </html>

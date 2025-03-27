@@ -1,0 +1,327 @@
+<div class="home-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to Sui Universe</h1>
+      <p>Your gateway to the decentralized world of digital assets</p>
+    </div>
+    <div class="universe-visualization">
+      <div class="planet sui-planet">
+        <div class="orbit nft-orbit">
+          <div class="satellite nft-satellite">NFT</div>
+        </div>
+        <div class="orbit coin-orbit">
+          <div class="satellite coin-satellite">SUI</div>
+        </div>
+        <div class="orbit contract-orbit">
+          <div class="satellite contract-satellite">Smart Contract</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card card">
+      <div class="feature-icon">🎨</div>
+      <h3>Create NFTs</h3>
+      <p>
+        Mint unique digital assets with just a few clicks. Add images,
+        properties, and descriptions to make your NFTs stand out.
+      </p>
+      <a href="#/create" class="btn btn-secondary">Start Creating</a>
+    </div>
+
+    <div class="feature-card card">
+      <div class="feature-icon">💎</div>
+      <h3>Manage Assets</h3>
+      <p>
+        View and manage your digital assets in one place. Track your SUI
+        balance, NFTs, and other blockchain objects.
+      </p>
+      <a href="#/assets" class="btn btn-secondary">View Assets</a>
+    </div>
+
+    <div class="feature-card card">
+      <div class="feature-icon">🛍️</div>
+      <h3>Trade & Share</h3>
+      <p>
+        List your NFTs in the marketplace, set prices, and trade with other
+        collectors using Sui Kiosk.
+      </p>
+      <a href="#/kiosk" class="btn btn-secondary">Open Marketplace</a>
+    </div>
+  </div>
+
+  <div class="web3-section">
+    <h2>Why Web3?</h2>
+    <div class="web3-grid">
+      <div class="web3-card card">
+        <h3>True Ownership</h3>
+        <p>
+          Your assets are truly yours, secured by blockchain technology. No
+          intermediaries can control or limit your access.
+        </p>
+      </div>
+
+      <div class="web3-card card">
+        <h3>Decentralized</h3>
+        <p>
+          Operate in a trustless environment where no single entity has control.
+          Your assets, your rules.
+        </p>
+      </div>
+
+      <div class="web3-card card">
+        <h3>Transparent</h3>
+        <p>
+          All transactions are recorded on the blockchain, providing complete
+          transparency and verifiability.
+        </p>
+      </div>
+
+      <div class="web3-card card">
+        <h3>Innovation</h3>
+        <p>
+          Be part of the future of digital ownership and commerce. Create,
+          trade, and explore new possibilities.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 60px;
+  }
+
+  .hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero-content h1 {
+    font-size: 48px;
+    margin: 0 0 20px 0;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .hero-content p {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin: 0;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+  }
+
+  .universe-visualization {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-out;
+  }
+
+  .planet {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
+  }
+
+  .orbit {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: orbit 10s linear infinite;
+  }
+
+  .nft-orbit {
+    width: 200px;
+    height: 200px;
+    animation-duration: 15s;
+  }
+
+  .coin-orbit {
+    width: 300px;
+    height: 300px;
+    animation-duration: 20s;
+  }
+
+  .contract-orbit {
+    width: 400px;
+    height: 400px;
+    animation-duration: 25s;
+  }
+
+  .satellite {
+    position: absolute;
+    padding: 8px 16px;
+    background: var(--bg);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: counter-orbit 10s linear infinite;
+  }
+
+  .nft-satellite {
+    animation-duration: 15s;
+  }
+
+  .coin-satellite {
+    animation-duration: 20s;
+  }
+
+  .contract-satellite {
+    animation-duration: 25s;
+  }
+
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes counter-orbit {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .feature-card {
+    text-align: center;
+    padding: 30px;
+  }
+
+  .feature-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .feature-card h3 {
+    margin: 0 0 15px 0;
+  }
+
+  .feature-card p {
+    margin: 0 0 20px 0;
+    color: var(--text-secondary);
+  }
+
+  .web3-section {
+    text-align: center;
+    animation: fadeIn 1s ease-out 0.4s backwards;
+  }
+
+  .web3-section h2 {
+    margin-bottom: 40px;
+    font-size: 32px;
+  }
+
+  .web3-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+
+  .web3-card {
+    padding: 30px;
+    background: var(--bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .web3-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .web3-card h3 {
+    margin: 0 0 15px 0;
+    color: var(--primary);
+  }
+
+  .web3-card p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-section {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .web3-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .web3-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-content h1 {
+      font-size: 36px;
+    }
+
+    .hero-content p {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<script>
+  function initHomePage() {
+    console.log('Home page initialized');
+  }
+</script>
