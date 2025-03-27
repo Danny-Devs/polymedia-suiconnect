@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create NFT - Sui Universe</title>
+    <link rel="stylesheet" href="/src/css/styles.css" />
+  </head>
+  <body>
+    <main class="create-container">
+      <div class="create-header">
+        <h1>Create Your NFT</h1>
+        <p>Mint a unique digital asset on the Sui blockchain</p>
+      </div>
+
+      <form class="create-form" id="nftForm">
+        <div class="form-group">
+          <label class="form-label" for="nftName">NFT Name</label>
+          <input
+            type="text"
+            id="nftName"
+            class="form-input"
+            placeholder="Enter NFT name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="nftDescription">Description</label>
+          <textarea
+            id="nftDescription"
+            class="form-input"
+            rows="4"
+            placeholder="Describe your NFT"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Image</label>
+          <div id="uploadZone" class="upload-zone">
+            <input type="file" id="fileInput" accept="image/*" class="hidden" />
+            <div class="upload-placeholder">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <p>Drag & drop an image here or click to browse</p>
+              <p class="upload-hint">
+                Supported formats: JPG, PNG, GIF (max 5MB)
+              </p>
+            </div>
+            <img id="imagePreview" class="hidden" />
+            <div id="imageControls" class="image-controls hidden">
+              <button type="button" class="button" onclick="removeImage()">
+                Remove Image
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="button gradient-button">Create NFT</button>
+      </form>
+    </main>
+
+    <script src="/src/js/components.js"></script>
+    <script src="/src/js/app.js"></script>
+    <script src="/src/js/nft.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        loadHeader();
+        initializeNFT();
+      });
+    </script>
+  </body>
+</html>
